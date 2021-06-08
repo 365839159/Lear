@@ -1,0 +1,7 @@
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\bin\Debug\SingletenDemo.exe.config
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\bin\Debug\SingletenDemo.exe
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\bin\Debug\SingletenDemo.pdb
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\obj\Debug\SingletenDemo.csprojAssemblyReference.cache
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\obj\Debug\SingletenDemo.csproj.CoreCompileInputs.cache
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\obj\Debug\SingletenDemo.exe
+C:\Users\zxc\Desktop\学习笔记\back-end\C#\23中设计模式\设计模式\SingletenDemo\obj\Debug\SingletenDemo.pdb
