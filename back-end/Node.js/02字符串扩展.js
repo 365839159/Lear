@@ -27,8 +27,8 @@
     let muit = `
     zxc,
     abc,
-    qwe
-    
+    qwe,
+    123
     `;
 
     console.log(muit);
