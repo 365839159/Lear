@@ -1,0 +1,15 @@
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.IServices.deps.json
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.IServices.dll
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.IServices.pdb
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.csprojAssemblyReference.cache
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.AssemblyInfoInputs.cache
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.AssemblyInfo.cs
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.csproj.CoreCompileInputs.cache
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.dll
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.pdb
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.Common.dll
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.Model.dll
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.Common.pdb
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.Model.pdb
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\bin\Debug\netcoreapp3.1\Blog.Core.Model.xml
+D:\创而新\张显成\代码\Lear\Lear\back-end\Asp.NetCore\LaoZhangDeZheXueQianHouFenLi\Blog.Core.IServices\obj\Debug\netcoreapp3.1\Blog.Core.IServices.csproj.CopyComplete
