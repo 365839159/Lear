@@ -18,4 +18,4 @@ alias cman='man -M /usr/share/man/zh_CN'
 cman rm
 ```
 
-![image-20210816161802709](D:\y创而新\张显成\代码\Lear\Lear\back-end\image\image-20210816161802709.png)
+![image-20210816161802709](../image/image-20210816161802709.png)
