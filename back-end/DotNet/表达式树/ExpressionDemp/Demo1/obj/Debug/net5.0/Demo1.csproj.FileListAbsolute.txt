@@ -1,0 +1,16 @@
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\Demo1.exe
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\Demo1.deps.json
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\Demo1.runtimeconfig.json
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\Demo1.runtimeconfig.dev.json
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\Demo1.dll
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\ref\Demo1.dll
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\bin\Debug\net5.0\Demo1.pdb
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.csproj.AssemblyReference.cache
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.GeneratedMSBuildEditorConfig.editorconfig
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.AssemblyInfoInputs.cache
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.AssemblyInfo.cs
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.csproj.CoreCompileInputs.cache
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.dll
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\ref\Demo1.dll
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.pdb
+F:\笔记\Lear\back-end\DotNet\表达式树\ExpressionDemp\Demo1\obj\Debug\net5.0\Demo1.genruntimeconfig.cache
