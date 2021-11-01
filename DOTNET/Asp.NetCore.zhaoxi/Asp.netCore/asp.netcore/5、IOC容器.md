@@ -226,3 +226,54 @@ namespace IOC.Test.Service
             }
 ```
 
+
+
+## 4 替换内置IOC 容器
+
+### 4.1 引用Nuget 包 
+
+```
+Autofac
+Autofac.Extensions.DependencyInjection
+```
+
+![image-20211030092247802](../../../../image/image-20211030092247802.png)
+
+### 4.2 在Program中替换为AutoFac
+
+```C#
+在ConfigureWebHostDefaults 后面
+.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+```
+
+![image-20211030092743143](../../../../image/image-20211030092743143.png)
+
+### 4.3 在Starup 中 增加 ConfigureContainer 方法
+
+```
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+            //containerBuilder.RegisterType<>().As<>();
+        }
+```
+
+![image-20211030093332907](../../../../image/image-20211030093332907.png)
+
+### 4.4 在ConfigureContainer 就可以是注册了
+
+```
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+            //注册IService 和实例为Service
+            containerBuilder.RegisterType<Service>().As<IService>();
+        }
+```
+
+![image-20211030095125413](../../../../image/image-20211030095125413.png)
+
+### 4.5 调试 可以看到  已经可以正常赋值了
+
+![image-20211030095324631](../../../../image/image-20211030095324631.png)
+
+
+
