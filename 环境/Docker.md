@@ -37,6 +37,8 @@ REDHAT_SUPPORT_PRODUCT_VERSION="7"
 
 # 安装
 
+## Centos 7安装
+
 ```shell
 # 卸载旧版本
 sudo yum remove docker \
@@ -630,8 +632,6 @@ CONTAINER ID   IMAGE     COMMAND       CREATED         STATUS         PORTS     
 
 [root@iZ2zebquvlfb5cndmb95u5Z ~]# docker ps
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-
-
 
 ~~~
 
