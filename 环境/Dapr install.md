@@ -374,3 +374,8 @@ INFO[0001] dapr initialized. Status: Running. Init Elapsed 986.951ms  app_id=fro
 INFO[0001] placement tables updated, version: 0          app_id=frontend instance=DESKTOP-NQ9L1A6 scope=dapr.runtime.actor.internal.placement type=log ver=1.4.3
 ```
 
+
+
+浏览器打开 http://localhost:50001
+
+![image-20211107231943586](../image/image-20211107231943586.png)
