@@ -499,6 +499,13 @@ centos				# 镜像的名字
 [root@7c41a13e0425 /]# exit  
 exit
 
+# 后台方式启动容器
+[root@iZ2zebquvlfb5cndmb95u5Z ~]# docker run --name centos2 -d  centos
+aeacf21532c77f0e6a5a624d2466aa24319fdaf1be9f21d1adf9958e479b5b4a
+
+# 问题：docker ps 发现centos2 停止了
+
+# 常见的坑：docker 容器使用后台运行，就必须要有一个前台进程，docker 发现没有应用，就会自动停止。
 
 ```
 
@@ -537,7 +544,7 @@ CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS                  
 
 
 
-### 退出容器
+### exit / ctrl+p+q退出容器
 
 ~~~shell
 # 退出并关闭容器
@@ -598,6 +605,12 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES					# 已
 
 ### 启动、停止、杀死
 
+帮助文档：https://docs.docker.com/engine/reference/commandline/start/
+
+​				   https://docs.docker.com/engine/reference/commandline/stop/
+
+​				   https://docs.docker.com/engine/reference/commandline/kill/
+
 ~~~shell
 # 查看所有容器
 [root@iZ2zebquvlfb5cndmb95u5Z ~]# docker ps -a
@@ -634,4 +647,346 @@ CONTAINER ID   IMAGE     COMMAND       CREATED         STATUS         PORTS     
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 
 ~~~
+
+
+
+## 其他命令
+
+### 查看日志
+
+帮助文档：https://docs.docker.com/engine/reference/commandline/logs/
+
+~~~shell
+# docker logs [可选参数] 容器id
+
+#可选参数
+  -f, --follow         # 跟踪日志输出
+  -n, --tail string    # 从日志末尾显示的行数（默认为“全部”
+  -t, --timestamps     # 显示时间戳
+      --until string   # 在时间戳（例如 2013-01-02T13:23:37Z）或相关（例如 42m 为 42 分钟）之前显示日志
+
+
+# 编写一段 shell 脚本输出信息
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run --name centos3 -d centos /bin/sh -c "while true; do echo zxc; sleep 2;done"
+2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef
+
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+2019c32f0dcd   centos    "/bin/sh -c 'while t…"   11 seconds ago   Up 10 seconds             centos3
+
+# 输出日志
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker logs -tf --tail 5  2019c32f0dcd
+2021-11-09T14:02:34.499444400Z zxc
+2021-11-09T14:02:36.501801226Z zxc
+2021-11-09T14:02:38.504164649Z zxc
+2021-11-09T14:02:40.506568684Z zxc
+2021-11-09T14:02:42.508835580Z zxc
+
+
+~~~
+
+### 查看容器中的进程信息
+
+帮助文档：https://docs.docker.com/engine/reference/commandline/top/
+
+```shell
+# docker top  容器id
+
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker top  2019c32f0dcd
+UID      PID     PPID      C      STIME   TTY  TIME      CMD
+root     10579   10560     0      21:55   ?    00:00:00  /bin/sh -c while true; do echo zxc; sleep 2;done
+root     11121   10579     0      22:08   ?    00:00:00  /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 2
+```
+
+### 查看镜像的元数据
+
+帮助文档：https://docs.docker.com/engine/reference/commandline/inspect/
+
+```shell
+# docker inspect  容器id/镜像id
+
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker inspect 2019c32f0dcd
+[
+    {
+        "Id": "2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef",
+        "Created": "2021-11-09T13:55:57.701924242Z",
+        "Path": "/bin/sh",
+        "Args": [
+            "-c",
+            "while true; do echo zxc; sleep 2;done"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 10579,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2021-11-09T13:55:58.047646322Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:5d0da3dc976460b72c77d94c8a1ad043720b0416bfc16c52c45d4847e53fadb6",
+        "ResolvConfPath": "/var/lib/docker/containers/2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef/hostname",
+        "HostsPath": "/var/lib/docker/containers/2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef/hosts",
+        "LogPath": "/var/lib/docker/containers/2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef/2019c32f0dcde38a30481f6012fc310ea052f6c43b8d5481a6e01426cf7368ef-json.log",
+        "Name": "/centos3",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "host",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "KernelMemory": 0,
+            "KernelMemoryTCP": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/4500e9f06fe6c774172facdd4d235da13c4518e6cd5cb8f719cfe56e5bd9493c-init/diff:/var/lib/docker/overlay2/4276982f224539f98d75963f237925c5c7be2e1b853743b33acfc0fd279e1513/diff",
+                "MergedDir": "/var/lib/docker/overlay2/4500e9f06fe6c774172facdd4d235da13c4518e6cd5cb8f719cfe56e5bd9493c/merged",
+                "UpperDir": "/var/lib/docker/overlay2/4500e9f06fe6c774172facdd4d235da13c4518e6cd5cb8f719cfe56e5bd9493c/diff",
+                "WorkDir": "/var/lib/docker/overlay2/4500e9f06fe6c774172facdd4d235da13c4518e6cd5cb8f719cfe56e5bd9493c/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "2019c32f0dcd",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "/bin/sh",
+                "-c",
+                "while true; do echo zxc; sleep 2;done"
+            ],
+            "Image": "centos",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {
+                "org.label-schema.build-date": "20210915",
+                "org.label-schema.license": "GPLv2",
+                "org.label-schema.name": "CentOS Base Image",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.vendor": "CentOS"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "da7db216b95f3a84f5376a9ef61631ae35327485d3f184bb07882e5df26c439b",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/da7db216b95f",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "53184d5f466126a498677a746f6fb94fc6dd64a301830b57abc3afed81beb808",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:02",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "d1f8ca3a7c6bf94ee9447b0af818fd0aa635b5d5749529bcd30ccac11ed8da14",
+                    "EndpointID": "53184d5f466126a498677a746f6fb94fc6dd64a301830b57abc3afed81beb808",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
