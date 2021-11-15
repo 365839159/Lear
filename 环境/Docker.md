@@ -1863,7 +1863,41 @@ b2bc1224d357   mysql:5.7   "docker-entrypoint.s…"   3 minutes ago    Up 3 minu
 
 
 
+# dockerfile
 
+dockerfile 是用来构建镜像的文件，命令参数脚本
+
+构建步骤：
+
+1、编写一个dockerfile文件
+
+2、docker build 构建成为一个镜像
+
+3、docker run 运行镜像
+
+4、docker push 发布镜像
+
+
+
+## 基础知识
+
+1、每个保留关键字都必须是大写
+
+2、执行上到下顺序执行
+
+3、# 表示注释
+
+4、每个指令都会创建提交一个新的镜像层，并提交。
+
+![image-20211115224815236](../image/image-20211115224815236.png)
+
+
+
+## 常用命令
+
+
+
+![image-20211115223322803](../image/image-20211115223322803.png)
 
 
 
