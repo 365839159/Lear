@@ -1307,7 +1307,7 @@ Status: Downloaded newer image for portainer/portainer:latest
 
 
 
-# docker 镜像详解
+# docker 镜像详解??
 
 
 
@@ -1895,11 +1895,832 @@ dockerfile 是用来构建镜像的文件，命令参数脚本
 
 ## 常用命令
 
+~~~shell
+FROM 			# 基础镜像
+MAINTAINER		# 维护者
+RUN				# 镜像构建的时候需要运行的命令
+ADD				# copy文件 自动解压
+WORKDIR			# 工作目录
+VOLUME			# 数据卷
+EXPOSE			# 保留端口配置
+CMD				# 指定容器启动的时候要运行的命令 ，只有最后一个会生效
+ENTRYPOINT		# 指定容器启动的时候要运行的命令 ，命令累加
+ONBUILD			# 当构建一个被继承dockerfile 这个时候就会运行ONBUILD
+COPY			# 类似 ADD 将文件拷贝到镜像中
+ENV				# 构建的时候设置环境变量
+~~~
+
 
 
 ![image-20211115223322803](../image/image-20211115223322803.png)
 
 
+
+## 使用 dockerfile 构建 centos
+
+```
+docker hub 中 99% 的基础镜像是From scratch  然后配置需要的软件和配置来进行构建
+```
+
+```shell
+# 官方的是没有 vim 和 ifcongfig 的
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec  -it centos01 /bin/bash
+[root@4e9d66d5822c /]# vim
+bash: vim: command not found
+[root@4e9d66d5822c /]# ifcongfig
+bash: ifcongfig: command not found
+[root@4e9d66d5822c /]# 
+```
+
+```shell
+# 通过 vim 编写 dockerfile
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#cat dockerfile-centos 
+FROM centos
+MAINTAINER ZXC
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+RUN yum -y install vim
+RUN yum -y install net-tools
+EXPOSE 80
+CMD exho $MYPATH
+CMD exho "-----end-----"
+CMD /bin/bash
+```
+
+```shell
+# 编译
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker build -f dockerfile-centos  -t mycentos:1.0 .
+Sending build context to Docker daemon  198.1MB
+Step 1/10 : FROM centos										# 拉取镜像
+ ---> 5d0da3dc9764
+Step 2/10 : MAINTAINER ZXC									# 维护者
+ ---> Running in 252b6007fa35
+Removing intermediate container 252b6007fa35
+ ---> 243b1ae1f2d1
+Step 3/10 : ENV MYPATH /usr/local							# 环境变量目录
+ ---> Running in 455fd49fe70d
+Removing intermediate container 455fd49fe70d				
+ ---> 820299d18636
+Step 4/10 : WORKDIR $MYPATH									# 工作目录
+ ---> Running in ddd70e843748
+Removing intermediate container ddd70e843748
+ ---> 1f144d2a674c
+Step 5/10 : RUN yum -y install vim							# 安装 vim
+ ---> Running in 727191826b58
+CentOS Linux 8 - AppStream                      6.8 MB/s | 8.1 MB     00:01    
+CentOS Linux 8 - BaseOS                         2.9 MB/s | 3.5 MB     00:01    
+CentOS Linux 8 - Extras                         2.7 kB/s |  10 kB     00:03    
+Dependencies resolved.
+================================================================================
+ Package             Arch        Version                   Repository      Size
+================================================================================
+Installing:
+ vim-enhanced        x86_64      2:8.0.1763-16.el8         appstream      1.4 M
+Installing dependencies:
+ gpm-libs            x86_64      1.20.7-17.el8             appstream       39 k
+ vim-common          x86_64      2:8.0.1763-16.el8         appstream      6.3 M
+ vim-filesystem      noarch      2:8.0.1763-16.el8         appstream       49 k
+ which               x86_64      2.21-16.el8               baseos          49 k
+
+Transaction Summary
+================================================================================
+Install  5 Packages
+
+Total download size: 7.8 M
+Installed size: 30 M
+Downloading Packages:
+(1/5): gpm-libs-1.20.7-17.el8.x86_64.rpm        2.3 MB/s |  39 kB     00:00    
+(2/5): vim-filesystem-8.0.1763-16.el8.noarch.rp 5.5 MB/s |  49 kB     00:00    
+(3/5): vim-enhanced-8.0.1763-16.el8.x86_64.rpm   22 MB/s | 1.4 MB     00:00    
+(4/5): which-2.21-16.el8.x86_64.rpm             474 kB/s |  49 kB     00:00    
+(5/5): vim-common-8.0.1763-16.el8.x86_64.rpm     15 MB/s | 6.3 MB     00:00    
+--------------------------------------------------------------------------------
+Total                                           2.7 MB/s | 7.8 MB     00:02     
+warning: /var/cache/dnf/appstream-02e86d1c976ab532/packages/gpm-libs-1.20.7-17.el8.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID 8483c65d: NOKEY
+CentOS Linux 8 - AppStream                      416 kB/s | 1.6 kB     00:00    
+Importing GPG key 0x8483C65D:
+ Userid     : "CentOS (CentOS Official Signing Key) <security@centos.org>"
+ Fingerprint: 99DB 70FA E1D7 CE22 7FB6 4882 05B5 55B3 8483 C65D
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+Key imported successfully
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1 
+  Installing       : which-2.21-16.el8.x86_64                               1/5 
+  Installing       : vim-filesystem-2:8.0.1763-16.el8.noarch                2/5 
+  Installing       : vim-common-2:8.0.1763-16.el8.x86_64                    3/5 
+  Installing       : gpm-libs-1.20.7-17.el8.x86_64                          4/5 
+  Running scriptlet: gpm-libs-1.20.7-17.el8.x86_64                          4/5 
+  Installing       : vim-enhanced-2:8.0.1763-16.el8.x86_64                  5/5 
+  Running scriptlet: vim-enhanced-2:8.0.1763-16.el8.x86_64                  5/5 
+  Running scriptlet: vim-common-2:8.0.1763-16.el8.x86_64                    5/5 
+  Verifying        : gpm-libs-1.20.7-17.el8.x86_64                          1/5 
+  Verifying        : vim-common-2:8.0.1763-16.el8.x86_64                    2/5 
+  Verifying        : vim-enhanced-2:8.0.1763-16.el8.x86_64                  3/5 
+  Verifying        : vim-filesystem-2:8.0.1763-16.el8.noarch                4/5 
+  Verifying        : which-2.21-16.el8.x86_64                               5/5 
+
+Installed:
+  gpm-libs-1.20.7-17.el8.x86_64         vim-common-2:8.0.1763-16.el8.x86_64    
+  vim-enhanced-2:8.0.1763-16.el8.x86_64 vim-filesystem-2:8.0.1763-16.el8.noarch
+  which-2.21-16.el8.x86_64             
+
+Complete!
+Removing intermediate container 727191826b58
+ ---> 2b0bcd85fc5c
+Step 6/10 : RUN yum -y install net-tools					# 安装 net-tools
+ ---> Running in 1bf9162f88af
+Last metadata expiration check: 0:00:14 ago on Thu Nov 18 14:08:58 2021.
+Dependencies resolved.
+================================================================================
+ Package         Architecture Version                        Repository    Size
+================================================================================
+Installing:
+ net-tools       x86_64       2.0-0.52.20160912git.el8       baseos       322 k
+
+Transaction Summary
+================================================================================
+Install  1 Package
+
+Total download size: 322 k
+Installed size: 942 k
+Downloading Packages:
+net-tools-2.0-0.52.20160912git.el8.x86_64.rpm   1.8 MB/s | 322 kB     00:00    
+--------------------------------------------------------------------------------
+Total                                           711 kB/s | 322 kB     00:00     
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1 
+  Installing       : net-tools-2.0-0.52.20160912git.el8.x86_64              1/1 
+  Running scriptlet: net-tools-2.0-0.52.20160912git.el8.x86_64              1/1 
+  Verifying        : net-tools-2.0-0.52.20160912git.el8.x86_64              1/1 
+
+Installed:
+  net-tools-2.0-0.52.20160912git.el8.x86_64                                     
+
+Complete!
+Removing intermediate container 1bf9162f88af
+ ---> fb8b17d3dff0
+Step 7/10 : EXPOSE 80
+ ---> Running in 5226b0528b90
+Removing intermediate container 5226b0528b90
+ ---> a084b977bb1f
+Step 8/10 : CMD exho $MYPATH
+ ---> Running in a1c48a212034
+Removing intermediate container a1c48a212034
+ ---> 9db19b35f20c
+Step 9/10 : CMD exho "-----end-----"
+ ---> Running in 5b98d572ee0d
+Removing intermediate container 5b98d572ee0d
+ ---> bed1f547b712
+Step 10/10 : CMD /bin/bash
+ ---> Running in bf9c57c3c0c9
+Removing intermediate container bf9c57c3c0c9
+ ---> a19dcae387b3
+Successfully built a19dcae387b3
+Successfully tagged mycentos:1.0						# 编译成功
+
+```
+
+```shell
+# 查看本地镜像
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker images
+REPOSITORY                                      TAG       IMAGE ID       CREATED         SIZE
+mycentos                                        1.0       a19dcae387b3   3 minutes ago   322MB
+
+```
+
+~~~shell
+# 运行测试
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -it mycentos:1.0 /bin/bash
+[root@569a18f4cc53 local]# pwd							# 工作目录
+/usr/local
+[root@569a18f4cc53 local]# ifconfig						# 测试安装的命令
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.4  netmask 255.255.0.0  broadcast 172.17.255.255
+        ether 02:42:ac:11:00:04  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+~~~
+
+## CMD 和 ENTRYPOINT 区别
+
+```shell
+# 编写测试 cmd dockerfile 
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#cat dockerfile-cmd-test 
+FROM centos
+CMD ["ls","-a"]
+
+# 构建镜像
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker build -f dockerfile-cmd-test  -t cmdtest .
+Sending build context to Docker daemon  198.1MB
+Step 1/2 : FROM centos
+ ---> 5d0da3dc9764
+Step 2/2 : CMD ["ls","-a"]
+ ---> Running in 0bc2e81ba58e
+Removing intermediate container 0bc2e81ba58e
+ ---> 221edbb57660
+Successfully built 221edbb57660
+Successfully tagged cmdtest:latest
+
+# run 运行
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -it  --name cmd-test1 cmdtest
+.   .dockerenv	dev  home  lib64       media  opt   root  sbin	sys  usr
+..  bin		etc  lib   lost+found  mnt    proc  run   srv	tmp  var
+
+# 追加命令 -l 报错 
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -it   --name cmd-test2  cmdtest -l
+docker: Error response from daemon: OCI runtime create failed: container_linux.go:380: starting container process caused: exec: "-l": executable file not found in $PATH: unknown.
+ERRO[0000] error waiting for container: context canceled 
+
+# docker：来自守护进程的错误响应：OCI 运行时创建失败：container_linux.go：380：导致启动容器进程：exec：“-l”：在 $PATH 中找不到可执行文件：未知。
+```
+
+~~~shell
+# 编写测试 ENTRYPOINT dockerfile 
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#cat dockerfile-entrypoint-test 
+FROM centos
+ENTRYPOINT ["ls","-a"]
+
+# 构建镜像
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker build -f dockerfile-entrypoint-test  -t entrypointtest .
+Sending build context to Docker daemon  198.1MB
+Step 1/2 : FROM centos
+ ---> 5d0da3dc9764
+Step 2/2 : ENTRYPOINT ["ls","-a"]
+ ---> Running in c010162e9f16
+Removing intermediate container c010162e9f16
+ ---> 0d56ee6a9199
+Successfully built 0d56ee6a9199
+Successfully tagged entrypointtest:latest
+
+# run 运行
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -it  --name entrypoint-test1 entrypointtest
+.   .dockerenv	dev  home  lib64       media  opt   root  sbin	sys  usr
+..  bin		etc  lib   lost+found  mnt    proc  run   srv	tmp  var
+
+
+# 追加命令 -l 显示详细信息
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -it  --name entrypoint-test2 entrypointtest -l
+total 56
+drwxr-xr-x   1 root root 4096 Nov 18 14:51 .
+drwxr-xr-x   1 root root 4096 Nov 18 14:51 ..
+-rwxr-xr-x   1 root root    0 Nov 18 14:51 .dockerenv
+lrwxrwxrwx   1 root root    7 Nov  3  2020 bin -> usr/bin
+drwxr-xr-x   5 root root  360 Nov 18 14:51 dev
+drwxr-xr-x   1 root root 4096 Nov 18 14:51 etc
+drwxr-xr-x   2 root root 4096 Nov  3  2020 home
+lrwxrwxrwx   1 root root    7 Nov  3  2020 lib -> usr/lib
+lrwxrwxrwx   1 root root    9 Nov  3  2020 lib64 -> usr/lib64
+drwx------   2 root root 4096 Sep 15 14:17 lost+found
+drwxr-xr-x   2 root root 4096 Nov  3  2020 media
+drwxr-xr-x   2 root root 4096 Nov  3  2020 mnt
+drwxr-xr-x   2 root root 4096 Nov  3  2020 opt
+dr-xr-xr-x 116 root root    0 Nov 18 14:51 proc
+dr-xr-x---   2 root root 4096 Sep 15 14:17 root
+drwxr-xr-x  11 root root 4096 Sep 15 14:17 run
+lrwxrwxrwx   1 root root    8 Nov  3  2020 sbin -> usr/sbin
+drwxr-xr-x   2 root root 4096 Nov  3  2020 srv
+dr-xr-xr-x  13 root root    0 Nov 14 11:45 sys
+drwxrwxrwt   7 root root 4096 Sep 15 14:17 tmp
+drwxr-xr-x  12 root root 4096 Sep 15 14:17 usr
+drwxr-xr-x  20 root root 4096 Sep 15 14:17 var
+
+
+~~~
+
+## 构建tomcat? ?
+
+
+
+
+
+# 发布镜像
+
+## 发布到 dockerhub
+
+```shell
+# docker login -u=username -p=password
+
+
+# 可选参数:
+  -p, --password string   Password
+      --password-stdin    Take the password from stdin
+  -u, --username string   Username
+
+# 登录		
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker login  -u365839159 -pzxc123...
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+```
+
+```shell
+#docker push [可选参数]名称:版本
+
+Usage:  docker push [OPTIONS] NAME[:TAG]
+
+Push an image or a repository to a registry
+
+参数:
+  -a, --all-tags                Push all tagged images in the repository
+      --disable-content-trust   Skip image signing (default true)
+  -q, --quiet                   Suppress verbose output
+
+
+# 发布 ？待研究
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker push zxc/mycentos:1.0
+
+```
+
+## 发布到阿里？？
+
+
+
+# docker 网络
+
+```shell
+# 清空环境
+
+# 移除容器
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker rm  -f $(docker  ps -aq)
+
+# 移除镜像
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker rmi -f $(docker images -aq)
+
+```
+
+ 
+
+## 查看网络 ip addr
+
+~~~shell
+# ip addr 
+# 1 lo：是本机回环地址
+# 2 eth0：是服务器内网地址
+# 3 docker0： docker地址
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:16:3e:03:92:2d brd ff:ff:ff:ff:ff:ff
+    inet 172.22.68.89/20 brd 172.22.79.255 scope global dynamic eth0
+       valid_lft 314197847sec preferred_lft 314197847sec
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:bc:21:28:79 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+46: br-20e384badcce: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:62:08:77:f1 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-20e384badcce
+       valid_lft forever preferred_lft forever
+60: br-99b9e5e1d1a0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:15:91:64:1a brd ff:ff:ff:ff:ff:ff
+    inet 172.20.0.1/16 brd 172.20.255.255 scope global br-99b9e5e1d1a0
+       valid_lft forever preferred_lft forever
+~~~
+
+![image-20211120105330669](../image/image-20211120105330669.png)
+
+## docker 是如何处理网络的？
+
+![image-20211120102004337](../image/image-20211120102004337.png)
+
+~~~shell
+# 运行 tomcat
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -d -P --name tomcat01 tomcat
+
+
+# 进入容器
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it  d19f7a81a6a5 /bin/bash
+
+# 安装 iproute2
+root@d19f7a81a6a5:/usr/local/tomcat# apt update && apt install -y iproute2
+Get:1 http://security.debian.org/debian-security bullseye-security InRelease [44.1 kB]
+Get:2 http://deb.debian.org/debian bullseye InRelease [116 kB]                      
+Get:3 http://security.debian.org/debian-security bullseye-security/main amd64 Packages [94.0 kB]
+Get:4 http://deb.debian.org/debian bullseye-updates InRelease [39.4 kB]
+Get:5 http://deb.debian.org/debian bullseye/main amd64 Packages [8180 kB]
+Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [2592 B]
+
+# 查看容器网络
+# 1 lo:容器内回环地址
+# 2 eth0@if164:容器地址
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it  d19f7a81a6a5 ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+163: eth0@if164: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+~~~
+
+![image-20211120105250744](../image/image-20211120105250744.png)
+
+~~~shell
+# liunx 是否能 ping 容器？
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.
+64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.064 ms
+64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.063 ms
+64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.085 ms
+64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.061 ms
+64 bytes from 172.17.0.2: icmp_seq=5 ttl=64 time=0.073 ms
+64 bytes from 172.17.0.2: icmp_seq=6 ttl=64 time=0.065 ms
+64 bytes from 172.17.0.2: icmp_seq=7 ttl=64 time=0.063 ms
+64 bytes from 172.17.0.2: icmp_seq=8 ttl=64 time=0.069 ms
+
+~~~
+
+```shell
+# 容器之间是否能 ping ？ 
+#运行另一个容器
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -d -P --name tomcat02 tomcat
+1f767bb386c78f8256b0836eff0a4ccedbe5820f867a7bbe41f33c10e97ac6f6
+
+# 安装 
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it  tomcat02  /bin/bash
+root@1f767bb386c7:/usr/local/tomcat# apt update && apt install -y iproute2
+
+# 查看网络信息
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it  tomcat02  ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+165: eth0@if166: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+
+# 进入这个容器
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat02 /bin/bash
+root@1f767bb386c7:/usr/local/tomcat# 
+
+
+
+# 安装ping 命令
+root@1f767bb386c7:/usr/local/tomcat#  apt update && apt install iputils-ping  
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+
+# 使用当前容器 ping 第一个容器
+root@1f767bb386c7:/usr/local/tomcat# ping 172.17.0.2
+PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.
+64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.101 ms
+64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.073 ms
+64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.078 ms
+64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.071 ms
+```
+
+## 原理
+
+~~~shell
+# 我们启动一个容器，docker 就会给容器分配一个ip 
+# 上面我们启动了两个容器 就会多两个网卡
+# 网卡的地址和容器的地址是对应的
+# 桥接模式 使用的技术是evth-pair技术
+# evth-pair 就是一对虚拟设备接口 都是成对出现的，一端连着协议 ，一端彼此相连。
+
+
+~~~
+
+![image-20211120131459049](../image/image-20211120131459049.png)
+
+![image-20211120131748661](../image/image-20211120131748661.png)
+
+
+
+```shell
+# ping 网络图
+```
+
+![image-20211120133458265](../image/image-20211120133458265.png)
+
+![image-20211120134815374](../image/image-20211120134815374.png)
+
+## link
+
+~~~shell
+# 问题： 编写一个微服务 项目重启 ip就变了 我们希望可以处理这个问题 ，通过名字访问？
+
+# 使用 容器2 ping 容器1
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat02 ping tomcat01
+ping: tomcat01: Name or service not known
+
+# 使用--link将 tomcat03 连接到 tomcat02 进行配置
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -d -P --name tomcat03 --link tomcat02 tomcat
+
+# 使用名称就可以ping 通了
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat03 ping tomcat02
+PING tomcat02 (172.17.0.3) 56(84) bytes of data.
+64 bytes from tomcat02 (172.17.0.3): icmp_seq=1 ttl=64 time=0.111 ms
+64 bytes from tomcat02 (172.17.0.3): icmp_seq=2 ttl=64 time=0.076 ms
+64 bytes from tomcat02 (172.17.0.3): icmp_seq=3 ttl=64 time=0.075 ms
+
+# 问题：tomcat02 能 ping tomcat03？ 
+# 不能。因为tomcat02 没有配置tomcat03
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat02 ping tomcat03
+ping: tomcat03: Name or service not known
+
+# link 的原理
+# 当容器 tomcat03 使用--link 连接到 tomcat02 其实是将 tomcat02 的ip 配置在tomcat03 所以tomcat03 可以ping tomcat02 ，tomcat02 不能ping tomcat03 因为tomcat02 host中没有配置tomcat03的地址。 
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat03 cat /etc/hosts
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+ff00::0	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+172.17.0.3	tomcat02 1f767bb386c7					# 这里配置了host
+172.17.0.4	41b901989d5b
+
+
+~~~
+
+## 自定义网络
+
+###  network
+
+帮助文档:https://docs.docker.com/engine/reference/commandline/network/
+
+~~~shell
+# docker network [可选参数]
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+
+# 可选参数
+
+  connect     # 将容器连接到网络
+  create      # 创建网络
+  disconnect  Disconnect a container from a network
+  inspect     Display detailed information on one or more networks
+  ls          # 列出所有的网络
+  prune       Remove all unused networks
+  rm          # 移除网络
+~~~
+
+~~~shell
+# 查看所有的网络
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network  ls
+NETWORK ID     NAME          DRIVER    SCOPE
+d1f8ca3a7c6b   bridge        bridge    local
+99b9e5e1d1a0   elastic       bridge    local
+79f7dd94e544   host          host      local
+1ff328b974ce   none          null      local
+20e384badcce   somenetwork   bridge    local
+
+# 网络模式
+bridge ：桥接 docker （自己创建也使用桥接模式）
+none ：不配置网络
+host ：与宿主机共享网络
+container：容器网络连通（用的少!局限很大）
+~~~
+
+~~~shell
+# 我们直接启动的命令 默认是加上 --net bridge 而这个就是我们的docker0
+docker run -d -P --name tomcat01 tomcat
+等价
+docker run -d -P --name tomcat02 --net bridge tomcat
+
+# docker0 特点：默认 域名不能访问 
+~~~
+
+### 创建自定义网络
+
+~~~shell
+# 自定义一个网络 mynet
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet
+320d4fb54572e10124878cb98af9c3abd4f6d7df13c0a26e6a553f9d4a89a9db
+
+# 查看
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network ls
+NETWORK ID     NAME          DRIVER    SCOPE
+d1f8ca3a7c6b   bridge        bridge    local
+99b9e5e1d1a0   elastic       bridge    local
+79f7dd94e544   host          host      local
+320d4fb54572   mynet         bridge    local
+1ff328b974ce   none          null      local
+20e384badcce   somenetwork   bridge    local
+
+
+~~~
+
+### 查看自定义详情
+
+~~~shell
+# 查看
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network inspect mynet
+[
+    {
+        "Name": "mynet",
+        "Id": "320d4fb54572e10124878cb98af9c3abd4f6d7df13c0a26e6a553f9d4a89a9db",
+        "Created": "2021-11-20T19:43:27.573418911+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "192.168.0.0/16",
+                    "Gateway": "192.168.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+~~~
+
+![image-20211120194626786](../image/image-20211120194626786.png)
+
+~~~shell
+# 再次测试ping
+
+# 创建两个容器
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -d -P --name tomcat01 --net mynet  tomcat
+9c02117609a83ec857fdffff91fd1dd1fccdf00ae8dd42fbe05f1e67c600dc2c
+
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker run -d -P --name tomcat02 --net mynet  tomcat
+bf152969ed2dd8211d7d313554e9fe5d54b457bdd028b8130a78082532b5a3c8
+
+# tomcat01 ping tomcat02
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat01 ping tomcat02
+PING tomcat02 (192.168.0.3) 56(84) bytes of data.
+64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=1 ttl=64 time=0.101 ms
+64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=2 ttl=64 time=0.086 ms
+64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=3 ttl=64 time=0.080 ms
+64 bytes from tomcat02.mynet (192.168.0.3): icmp_seq=4 ttl=64 time=0.093 ms
+
+# tomcat02 ping tomcat01
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat02 ping tomcat01
+PING tomcat01 (192.168.0.2) 56(84) bytes of data.
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=1 ttl=64 time=0.065 ms
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=2 ttl=64 time=0.087 ms
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=3 ttl=64 time=0.078 ms
+
+~~~
+
+![image-20211120200019555](../image/image-20211120200019555.png)
+
+![image-20211120200029935](../image/image-20211120200029935.png)
+
+~~~shell
+# 自定义网络 docker 已经自动维护好对应的关系 ，平常也是这样使用网络
+# 优点：不同的集群使用不同的网络，保证集群是安全和健康的 
+~~~
+
+![image-20211120200759223](../image/image-20211120200759223.png)
+
+## 网络互通
+
+### docker network connect 
+
+![image-20211120203013909](../image/image-20211120203013909.png)
+
+
+
+~~~shell
+# tomcat01 、 tomcat02 ======> mynet
+# tomcat03 、 tomcat04 ======> bridge 
+~~~
+
+
+
+![image-20211120203157129](../image/image-20211120203157129.png)
+
+~~~shell
+# docker network connect
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network connect --help
+
+Usage:  docker network connect [OPTIONS] NETWORK CONTAINER   # 使用方法
+
+Connect a container to a network
+
+Options:
+      --alias strings           Add network-scoped alias for the container
+      --driver-opt strings      driver options for the network
+      --ip string               IPv4 address (e.g., 172.30.100.104)
+      --ip6 string              IPv6 address (e.g., 2001:db8::33)
+      --link list               Add link to another container
+      --link-local-ip strings   Add a link-local address for the container
+      
+ 
+
+~~~
+
+~~~shell
+# 打通 bridge 中 tomcat03 和 mynet 的连接 实现一个容器两个网络
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network connect mynet tomcat03
+
+# 查看 网络
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker network  inspect mynet
+
+~~~
+
+![image-20211120205100968](../image/image-20211120205100968.png)
+
+~~~shell
+# 既然 tomcat03 加入 mynet 网络中，那么就可以 ping
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat03 ping tomcat01
+PING tomcat01 (192.168.0.2) 56(84) bytes of data.
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=1 ttl=64 time=0.086 ms
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=2 ttl=64 time=0.071 ms
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=3 ttl=64 time=0.084 ms
+64 bytes from tomcat01.mynet (192.168.0.2): icmp_seq=4 ttl=64 time=0.084 ms
+
+# tomcat04 没有加入 还是不能 ping
+[root@iZ2zebquvlfb5cndmb95u5Z /root]
+#docker exec -it tomcat04 ping tomcat01
+ping: tomcat01: Name or service not known
+
+~~~
+
+## 实战redis 集群？？
+
+# 服务部署 ？？
+
+
+
+# DockerCompose
 
 
 
