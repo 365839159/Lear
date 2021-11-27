@@ -2722,5 +2722,360 @@ ping: tomcat01: Name or service not known
 
 # DockerCompose
 
+> compose 来轻松管理多个容器
 
+>官方介绍
+
+定义运行多个容器
+
+YAML file 配置文件
+
+命令有哪些？
+
+Compose is a tool for defining and running **multi-container Docker applications**. With Compose, you use a **YAML** file to configure your application’s services. Then, with a **single command**, you create and start all the services from your configuration. To learn more about all the features of Compose, see [the list of features](https://docs.docker.com/compose/#features).
+
+所有环境都可以使用 
+
+Compose works in all environments: **production, staging, development, testing**, as well as CI workflows. You can learn more about each case in [Common Use Cases](https://docs.docker.com/compose/#common-use-cases).
+
+
+
+三步走
+
+Using Compose is basically a three-step process:
+
+1. Define your app’s environment with a `Dockerfile` so it can be reproduced anywhere.
+
+   > Docker file 保证我们的项目在任何地方运行
+
+2. Define the **services** that make up your app in `docker-compose.yml` so they can be run together in an isolated environment.
+
+   > service 什么是服务？
+   >
+   > docker-compose.yml 怎么写？
+
+3. Run `docker compose up` and the [Docker compose command](https://docs.docker.com/compose/cli-command/) starts and runs your entire app. You can alternatively run `docker-compose up` using the docker-compose binary.
+
+   > 启动项目
+
+> 注意
+
+Compose 是一个开源项目 需要单独安装
+
+dockerfile 让程序在任何地方运行。
+
+compose.yml 运行多容器
+
+~~~yaml
+version: "3.9"  # optional since v1.27.0
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+      - logvolume01:/var/log
+    links:
+      - redis
+  redis:
+    image: redis
+volumes:
+  logvolume01: {}
+~~~
+
+Compose :重要概念
+
+- 服务services。   容器 应用 （web ， redis ，mysql）
+- 项目。 一组关联的容器。
+
+
+
+## 安装
+
+帮助文档：https://docs.docker.com/compose/install/
+
+### centos
+
+> 国内（推荐）
+>
+> ```shell
+> curl -L https://get.daocloud.io/docker/compose/releases/download/v2.1.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+> 
+> ```
+
+> 国外
+>
+> ~~~shell
+> curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+> ~~~
+>
+> 
+
+![image-20211121175901149](../image/image-20211121175901149.png)
+
+## 授权
+
+~~~shell
+chmod +x /usr/local/bin/docker-compose
+~~~
+
+### 查看版本
+
+~~~shell
+[root@iZ2zebquvlfb5cndmb95u5Z /usr/local/bin]
+#docker-compose --version
+Docker Compose version v2.1.1
+
+~~~
+
+## 体验官方案例
+
+帮助文档：https://docs.docker.com/compose/gettingstarted/
+
+> 1 应用
+>
+> ~~~shell
+> # 创建目录,进入目录
+>  mkdir composetest
+>  cd composetest
+> 
+> ~~~
+>
+> ~~~python
+> # 创建 app.py
+> vim app.py
+> ~~~
+>
+> ~~~shell
+> # 粘贴内容
+> import time
+> 
+> import redis
+> from flask import Flask
+> 
+> app = Flask(__name__)
+> cache = redis.Redis(host='redis', port=6379)
+> 
+> def get_hit_count():
+>     retries = 5
+>     while True:
+>         try:
+>             return cache.incr('hits')
+>         except redis.exceptions.ConnectionError as exc:
+>             if retries == 0:
+>                 raise exc
+>             retries -= 1
+>             time.sleep(0.5)
+> 
+> @app.route('/')
+> def hello():
+>     count = get_hit_count()
+>     return 'Hello World! I have been seen {} times.\n'.format(count)
+> ~~~
+>
+> 
+
+> 2 dockerfile
+>
+> ~~~dockerfile
+> # syntax=docker/dockerfile:1
+> FROM python:3.7-alpine
+> WORKDIR /code
+> ENV FLASK_APP=app.py
+> ENV FLASK_RUN_HOST=0.0.0.0
+> RUN apk add --no-cache gcc musl-dev linux-headers
+> COPY requirements.txt requirements.txt
+> RUN pip install -r requirements.txt
+> EXPOSE 5000
+> COPY . .
+> CMD ["flask", "run"]
+> ~~~
+
+> 3 docker-compose.yml
+>
+> ~~~yaml
+> # docker-compose.yml
+> version: "3.9"
+> services:
+>   web:
+>     build: .
+>     ports:
+>       - "5000:5000"
+>   redis:
+>     image: "redis:alpine"
+> ~~~
+
+> 4 启动项目
+>
+> ```shell
+> [root@iZ2zebquvlfb5cndmb95u5Z /usr/local/bin/composetest]
+> #docker-compose up
+> Sending build context to Docker daemon  638.3kB
+> Step 1/10 : FROM python:3.7-alpine
+>  ---> f0c1a69798c7
+> Step 2/10 : WORKDIR /code
+>  ---> Using cache
+>  ---> eeb4cda6bd9a
+> Step 3/10 : ENV FLASK_APP=app.py
+>  ---> Using cache
+>  ---> 4c6f8c173b59
+> Step 4/10 : ENV FLASK_RUN_HOST=0.0.0.0
+>  ---> Using cache
+>  ---> 01ec3a71bfc3
+> Step 5/10 : RUN apk add --no-cache gcc musl-dev linux-headers
+>  ---> Running in 25b9470d03da
+> fetch https://dl-cdn.alpinelinux.org/alpine/v3.14/main/x86_64/APKINDEX.tar.gz
+> fetch https://dl-cdn.alpinelinux.org/alpine/v3.14/community/x86_64/APKINDEX.tar.gz
+> (1/13) Installing libgcc (10.3.1_git20210424-r2)
+> (2/13) Installing libstdc++ (10.3.1_git20210424-r2)
+> (3/13) Installing binutils (2.35.2-r2)
+> (4/13) Installing libgomp (10.3.1_git20210424-r2)
+> (5/13) Installing libatomic (10.3.1_git20210424-r2)
+> (6/13) Installing libgphobos (10.3.1_git20210424-r2)
+> (7/13) Installing gmp (6.2.1-r0)
+> (8/13) Installing isl22 (0.22-r0)
+> (9/13) Installing mpfr4 (4.1.0-r0)
+> (10/13) Installing mpc1 (1.2.1-r0)
+> (11/13) Installing gcc (10.3.1_git20210424-r2)
+> (12/13) Installing linux-headers (5.10.41-r0)
+> (13/13) Installing musl-dev (1.2.2-r3)
+> Executing busybox-1.33.1-r6.trigger
+> OK: 140 MiB in 48 packages
+>  ---> 05f527e71ffd
+> Step 6/10 : COPY requirements.txt requirements.txt
+>  ---> c4db415cd326
+> Step 7/10 : RUN pip install -r requirements.txt
+>  ---> Running in 6a46091f8a60
+> Collecting flask
+>   Downloading Flask-2.0.2-py3-none-any.whl (95 kB)
+> Collecting redis
+>   Downloading redis-4.0.1-py3-none-any.whl (118 kB)
+> Collecting click>=7.1.2
+>   Downloading click-8.0.3-py3-none-any.whl (97 kB)
+> Collecting Jinja2>=3.0
+>   Downloading Jinja2-3.0.3-py3-none-any.whl (133 kB)
+> Collecting itsdangerous>=2.0
+>   Downloading itsdangerous-2.0.1-py3-none-any.whl (18 kB)
+> Collecting Werkzeug>=2.0
+>   Downloading Werkzeug-2.0.2-py3-none-any.whl (288 kB)
+> Collecting deprecated
+>   Downloading Deprecated-1.2.13-py2.py3-none-any.whl (9.6 kB)
+> Collecting importlib-metadata
+>   Downloading importlib_metadata-4.8.2-py3-none-any.whl (17 kB)
+> Collecting MarkupSafe>=2.0
+>   Downloading MarkupSafe-2.0.1-cp37-cp37m-musllinux_1_1_x86_64.whl (30 kB)
+> Collecting wrapt<2,>=1.10
+>   Downloading wrapt-1.13.3-cp37-cp37m-musllinux_1_1_x86_64.whl (78 kB)
+> Collecting zipp>=0.5
+>   Downloading zipp-3.6.0-py3-none-any.whl (5.3 kB)
+> Collecting typing-extensions>=3.6.4
+>   Downloading typing_extensions-4.0.0-py3-none-any.whl (22 kB)
+> Installing collected packages: zipp, typing-extensions, wrapt, MarkupSafe, importlib-metadata, Werkzeug, Jinja2, itsdangerous, deprecated, click, redis, flask
+> Successfully installed Jinja2-3.0.3 MarkupSafe-2.0.1 Werkzeug-2.0.2 click-8.0.3 deprecated-1.2.13 flask-2.0.2 importlib-metadata-4.8.2 itsdangerous-2.0.1 redis-4.0.1 typing-extensions-4.0.0 wrapt-1.13.3 zipp-3.6.0
+> WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+> WARNING: You are using pip version 21.2.4; however, version 21.3.1 is available.
+> You should consider upgrading via the '/usr/local/bin/python -m pip install --upgrade pip' command.
+>  ---> d267c58698b7
+> Step 8/10 : EXPOSE 5000
+>  ---> Running in 7444f1a09f66
+>  ---> f196f80a4ec2
+> Step 9/10 : COPY . .
+>  ---> a586b0d94b6e
+> Step 10/10 : CMD ["flask", "run"]
+>  ---> Running in 63ae9f0cc7c2
+>  ---> 29866d779c4d
+> Successfully built 29866d779c4d
+> Successfully tagged composetest_web:latest
+> 
+> Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+> [+] Running 3/3
+>  ⠿ Network composetest_default    Created                                                                  0.0s
+>  ⠿ Container composetest-redis-1  Created                                                                  0.1s
+>  ⠿ Container composetest-web-1    Created                                                                  0.1s
+> Attaching to composetest-redis-1, composetest-web-1
+> composetest-redis-1  | 1:C 21 Nov 2021 11:41:27.779 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+> composetest-redis-1  | 1:C 21 Nov 2021 11:41:27.779 # Redis version=6.2.6, bits=64, commit=00000000, modified=0, pid=1, just started
+> composetest-redis-1  | 1:C 21 Nov 2021 11:41:27.779 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+> composetest-redis-1  | 1:M 21 Nov 2021 11:41:27.780 * monotonic clock: POSIX clock_gettime
+> composetest-redis-1  | 1:M 21 Nov 2021 11:41:27.781 * Running mode=standalone, port=6379.
+> composetest-redis-1  | 1:M 21 Nov 2021 11:41:27.781 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+> composetest-redis-1  | 1:M 21 Nov 2021 11:41:27.781 # Server initialized
+> composetest-redis-1  | 1:M 21 Nov 2021 11:41:27.781 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+> composetest-redis-1  | 1:M 21 Nov 2021 11:41:27.781 * Ready to accept connections
+> composetest-web-1    |  * Serving Flask app 'app.py' (lazy loading)
+> composetest-web-1    |  * Environment: production
+> composetest-web-1    |    WARNING: This is a development server. Do not use it in a production deployment.
+> composetest-web-1    |    Use a production WSGI server instead.
+> composetest-web-1    |  * Debug mode: off
+> composetest-web-1    | /usr/local/lib/python3.7/site-packages/redis/connection.py:72: UserWarning: redis-py works best with hiredis. Please consider installing
+> composetest-web-1    |   warnings.warn(msg)
+> composetest-web-1    |  * Running on all addresses.
+> composetest-web-1    |    WARNING: This is a development server. Do not use it in a production deployment.
+> composetest-web-1    |  * Running on http://172.21.0.3:5000/ (Press CTRL+C to quit)
+> composetest-web-1    | 172.21.0.1 - - [21/Nov/2021 11:44:01] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 172.21.0.1 - - [21/Nov/2021 11:44:04] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 172.21.0.1 - - [21/Nov/2021 11:44:05] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 111.196.124.20 - - [21/Nov/2021 11:46:42] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 111.196.124.20 - - [21/Nov/2021 11:46:43] "GET /favicon.ico HTTP/1.1" 404 -
+> composetest-web-1    | 111.196.124.20 - - [21/Nov/2021 12:10:55] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 111.196.124.20 - - [21/Nov/2021 12:14:49] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 111.196.124.20 - - [21/Nov/2021 12:20:34] "GET / HTTP/1.1" 200 -
+> composetest-web-1    | 106.15.202.168 - - [21/Nov/2021 12:35:51] "GET / HTTP/1.1" 200 -
+> composetest-redis-1  | 1:M 21 Nov 2021 12:41:28.050 * 1 changes in 3600 seconds. Saving...
+> composetest-redis-1  | 1:M 21 Nov 2021 12:41:28.051 * Background saving started by pid 14
+> composetest-redis-1  | 14:C 21 Nov 2021 12:41:28.054 * DB saved on disk
+> composetest-redis-1  | 14:C 21 Nov 2021 12:41:28.055 * RDB: 2 MB of memory used by copy-on-write
+> composetest-redis-1  | 1:M 21 Nov 2021 12:41:28.151 * Background saving terminated with success
+> 
+> ```
+
+> 5 退出
+>
+> ~~~shell
+> # 在docker-compose 下执行
+> docker-compose stop
+> 
+> # ctrl + c
+> [+] Running 2/2
+>  ⠿ Container composetest-redis-1  Stopped                                                                  0.2s
+>  ⠿ Container composetest-web-1    Stopped                                                                 10.2s
+> canceled
+> ~~~
+
+## compose 配置编写规则 ??
+
+帮助文档:https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+
+
+~~~yaml
+# 3层
+version:'' 	# 版本
+services:	# 服务
+	服务1:web
+		# 服务配置
+	服务1:redis
+		# 服务配置
+# 其他配置 网络/卷、全局规则
+volumes：
+networks：
+configs：
+~~~
+
+
+
+## 部署wp 博客??
+
+帮助文档：https://docs.docker.com/samples/wordpress/
+
+## 部署自己的微服务？？
+
+
+
+# Docker Swarm
+
+## 购买服务器
+
+## 安装docker
 
