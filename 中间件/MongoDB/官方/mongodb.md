@@ -446,7 +446,7 @@
 > >
 > > > 要指定相等条件，请`<field>:<value>` 在[查询过滤器文档中](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter)使用表达式 
 > > >
-> > > { <field1>: <value1>, ... }
+> > > { `<field1>: <value1>`, ... }
 > >
 > > ~~~shell
 > > db.inventory.find( { status: "D" } )
@@ -460,7 +460,7 @@
 > >
 > > > 要指定相等条件，请使用[Eq](https://mongodb.github.io/mongo-csharp-driver/2.10/apidocs/html/Overload_MongoDB_Driver_FilterDefinitionBuilder_1_Eq.htm)方法构造过滤器 
 > > >
-> > > Builders<BsonDocument>.Filter.Eq(<field>, <value>);
+> > > Builders<BsonDocument>.Filter.Eq(``<field>, <value>``);
 > >
 > > ```c#
 > > public async Task<object> FindEq()
@@ -501,7 +501,7 @@
 > >
 > > > [查询过滤器文档](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter)可以使用[查询运算符](https://docs.mongodb.com/manual/reference/operator/query/#std-label-query-selectors)，以指定在以下形式的条件：
 > > >
-> > > { <field1>: { <operator1>: <value1> }, ... }
+> > > { `<field1>`: { `<operator1>: <value1>` }, ... }
 > >
 > > ~~~sh
 > > db.inventory.find( { status: { $in: [ "A", "D" ] } } )
@@ -517,7 +517,7 @@
 > > >
 > > > 使用 [FilterDefinitionBuilder](https://mongodb.github.io/mongo-csharp-driver/2.10/apidocs/html/T_MongoDB_Driver_FilterDefinitionBuilder_1.htm) 方法创建过滤器文档。例如：
 > > >
-> > > var builder = Builders<BsonDocument>.Filter.In(<field1>, <value1>);
+> > > var builder = Builders<BsonDocument>.Filter.In(``<field1>, <value1>``);
 > >
 > > ```C#
 > > public async Task<object> FindIn()
@@ -560,7 +560,7 @@
 > >
 > > > 复合查询可以为集合文档中的多个字段指定条件。隐式地，逻辑`AND`连词连接复合查询的子句，以便查询选择集合中与所有条件匹配的文档。
 > > >
-> > > {<field1>: <value1>,<field1>: <value1>,......}
+> > > {``<field1>``: `<value1>`,``<field1>``: `<value1>`,......}
 > >
 > > ~~~shell
 > > db.inventory.find( { status: "A", qty: { $lt: 30 } } )
@@ -574,7 +574,7 @@
 > >
 > > >复合查询可以为集合文档中的多个字段指定条件。隐式地，逻辑`AND`连词连接复合查询的子句，以便查询选择集合中与所有条件匹配的文档。
 > > >
-> > >var filter = builder.And(builder.Eq("status", "A"), builder.Lt("qty", 30));
+> > >builder.And(builder.Eq(`<field>`, `<value>`), builder.Lt(`<field>`,`<value>`));
 > >
 > > ```C#
 > > public async Task<object> FindAnd()
@@ -614,7 +614,7 @@
 > >
 > > > 使用[`$or`](https://docs.mongodb.com/manual/reference/operator/query/or/#mongodb-query-op.-or)运算符，您可以指定一个复合查询，该查询将每个子句与逻辑`OR`连词连接起来，以便查询选择集合中至少匹配一个条件的文档。
 > > >
-> > > { $or: [ { <field1>: <value1> }, { <field1>: {<operator1>: <value1> } } ] 
+> > > { $or: [ { `<field1>`: `<value1>` }, { `<field1>`: {``<operator1>``: `<value1>` } } ] 
 > >
 > >  ~~~shell
 > >  db.inventory.find( { $or: [ { status: "D" }, { qty: { $lt: 30 } } ] } )
@@ -628,7 +628,7 @@
 > >
 > > >  使用[`$or`](https://docs.mongodb.com/manual/reference/operator/query/or/#mongodb-query-op.-or)运算符，您可以指定一个复合查询，该查询将每个子句与逻辑`OR`连词连接起来，以便查询选择集合中至少匹配一个条件的文档。
 > > >
-> > > var filter = builder.Or(builder.Eq("status", "A"), builder.Lt("qty", 30));
+> > >  builder.Or(builder.Eq(`<field>`, `<value>`), builder.Lt(`<field>`, `<value>`));
 > >
 > > ```c#
 > > public async Task<object> FindOr()
@@ -666,7 +666,7 @@
 > >
 > > > and 和 or 可以结合使用
 > > >
-> > > { <field1>: <value1>, $or: [ {<field1>: { <operator1>: <value1>  } }, {<field1>: <value1> } ] }
+> > > { `<field1>: <value1>`, $or: [ {``<field1>``: { `<operator1>`: `<value1>`  } }, {``<field1>``: `<value1>` } ] }
 > >
 > >  ~~~shell
 > >  db.inventory.find( {
@@ -683,11 +683,11 @@
 > >
 > > > and 和 or 可以结合使用
 > > >
-> > > var filter = builder.And(
-> > > 	builder.Eq("status", "A"),
+> > >  builder.And(
+> > > 	builder.Eq(`<field>`,`value`),
 > > > 	builder.Or(
 > > >
-> > > ​		builder.Lt("qty", 30),
+> > > ​		builder.Lt(`<field>`,`value`),
 > > >
 > > > ​		builder.Regex("item", new BsonRegularExpression("^p")))
 > > >
@@ -721,7 +721,9 @@
 
 #### 匹配嵌套文档
 
-> 要在嵌入/嵌套文档的字段上指定相等条件，请使用 [查询过滤器文档](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter) `{ <field>: <value> } 。`<value>`是一个文档。
+> 要在嵌入/嵌套文档的字段上指定相等条件，请使用 [查询过滤器文档](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter) `{ <field>: <value> } `   
+>
+> `<value>`是一个文档。
 >
 > 整个嵌入文档的相等匹配需要 指定文档的*精确*匹配`<value>`，包括字段顺序。
 >
@@ -751,7 +753,7 @@
 > >
 > > > 要在嵌入/嵌套文档的字段上指定相等条件，请使用[Eq](https://mongodb.github.io/mongo-csharp-driver/2.10/apidocs/html/Overload_MongoDB_Driver_FilterDefinitionBuilder_1_Eq.htm) 方法构造过滤器 
 > > >
-> > > Builders<BsonDocument>.Filter.Eq(<field>, <value>) 
+> > > Builders<BsonDocument>.Filter.Eq(``<field>, <value>``) 
 > > >
 > > > `<value>` 是要匹配的文档。
 > >
@@ -836,7 +838,7 @@
 > >
 > > > [查询过滤器文档](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter)可以使用[查询运算符](https://docs.mongodb.com/manual/reference/operator/query/#std-label-query-selectors)，以指定在以下形式的条件：
 > > >
-> > > { <field1>: { <operator1>: <value1> }, ... }
+> > > { `<field1>`: { `<operator1>: <value1>` }, ... }
 > >
 > >  
 > >
@@ -852,7 +854,7 @@
 > >
 > >    >除了相等过滤器，MongoDB 还提供了各种[查询运算符](https://docs.mongodb.com/manual/reference/operator/query/#std-label-query-selectors)来指定过滤条件。使用 [FilterDefinitionBuilder](https://mongodb.github.io/mongo-csharp-driver/2.10/apidocs/html/T_MongoDB_Driver_FilterDefinitionBuilder_1.htm) 方法创建过滤器文档。例如：
 > >    >
-> >    >var builder = Builders<BsonDocument>.Filter.Lt(<field2>, <value2>);
+> >    > Builders<BsonDocument>.Filter.Lt(``<field2>, <value2>``);
 > >
 > > ```c#
 > > public async Task<object> FindNestedFieldOperator()
@@ -885,7 +887,7 @@
 >
 > > mongosh
 > >
-> > >  {<field1>: <value1>,<field1>: <value1>,......}
+> > >  {``<field>: <value>``,``<field>: <value>``,......}
 > >
 > > ~~~shell
 > > db.inventory.find( { "size.h": { $lt: 15 }, "size.uom": "in", status: "D" } )
@@ -896,7 +898,7 @@
 > > C# 
 > >
 > > > var builder = Builders<BsonDocument>.Filter;
-> > > builder.And(builder.Eq(<field1>, <value1>), builder.Lt(<field2>, <value2>));
+> > > builder.And(builder.Eq(``<field1>, <value1>``), builder.Lt(``<field2>, <value2>``));
 > >
 > > 
 > >
@@ -1024,7 +1026,7 @@
 >>
 >> > 元素匹配，不考虑数组中的顺序或其他元素
 >> >
->> > > { <field>: {$all:<value>} } 
+>> > > {`` <field>``: {$all:``<value>``} } 
 >> > >
 >> > > `<value>`是要匹配的数组 ，不考虑数组中的顺序或其他元素
 >> >
@@ -1044,7 +1046,7 @@
 >> >
 >> > > 要在数组上指定相等条件，请使用[Eq](https://mongodb.github.io/mongo-csharp-driver/2.10/apidocs/html/Overload_MongoDB_Driver_FilterDefinitionBuilder_1_Eq.htm)方法构造过滤器：
 >> > >
->> > > Builders<BsonDocument>.Filter.Eq(<field>, <value>)
+>> > > Builders<BsonDocument>.Filter.Eq(``<field>, <value>``)
 >> > >
 >> > > `<value>` 是要匹配的确切数组，包括元素的顺序
 >> >
@@ -1075,7 +1077,7 @@
 >> >
 >> > > 如果您希望找到一个数组包含元素`"red"`和 `"blank"`，而不考虑数组中的顺序或其他元素，请使用[`$all`](https://docs.mongodb.com/manual/reference/operator/query/all/#mongodb-query-op.-all)运算符：
 >> > >
->> > > var filter = Builders<BsonDocument>.Filter.All(<field>, <value>);
+>> > >  Builders<BsonDocument>.Filter.All(``<field>, <value>``);
 >> > >
 >> > > `<value>` 是要匹配的数组，不考虑数组中的顺序或其他元素
 >> >
@@ -1120,7 +1122,7 @@
 > > >
 > > > `{ <field>: <value> }`
 > > >
-> > >  `<value>元素的值 (多个使用 all)。
+> > >  `<value>`元素的值 (多个使用 all)。
 > >
 > >  ~~~shell
 > >  db.inventory.find({tags:"plain"})
@@ -1134,7 +1136,7 @@
 > >
 > > > 要查询数组字段是否至少包含*一个*具有指定值的元素，请使用[Eq](https://mongodb.github.io/mongo-csharp-driver/2.10/apidocs/html/Overload_MongoDB_Driver_FilterDefinitionBuilder_1_Eq.htm)方法构造一个过滤器 ：
 > > >
-> > > Builders<BsonDocument>.Filter.Eq(<field>, <value>)
+> > > Builders<BsonDocument>.Filter.Eq(``<field>, <value>``)
 > > >
 > > > `<value>` 是要匹配的元素值(多个使用 all)
 > > >
@@ -1173,7 +1175,7 @@
 > >
 > > > 要对数组字段中的元素指定条件，请在 [查询过滤器文档中](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter)使用[查询运算符](https://docs.mongodb.com/manual/reference/operator/query/#std-label-query-selectors)：
 > > >
-> > > { <array field>: { <operator1>: <value1>, ... } }
+> > > { `<array field>`: { `<operator1>: <value1>`, ... } }
 > >
 > >  ~~~shell
 > >  db.inventory.find( { dim_cm: { $gt: 25 } } )
@@ -1189,7 +1191,7 @@
 > >
 > > >  要对数组字段中的元素指定条件，请在 [查询过滤器文档中](https://docs.mongodb.com/manual/core/document/#std-label-document-query-filter)使用[查询运算符](https://docs.mongodb.com/manual/reference/operator/query/#std-label-query-selectors)。例如：
 > > >
-> > >  Builders<BsonDocument>.Filter.Gt(<array field>, <value1>);
+> > >  Builders<BsonDocument>.Filter.Gt(``<array field>, <value>``);
 > >
 > >   
 > >
@@ -1247,7 +1249,7 @@
 > > C# 
 > >
 > > > var builder = Builders<BsonDocument>.Filter;
-> > > builder.And(builder.Eq(<field1>, <value1>), builder.Lt(<field2>, <value2>));
+> > > builder.And(builder.Eq(``<field1>, <value1>``), builder.Lt(``<field2>, <value2>``));
 > >
 > > ```c#
 > > public async Task<object> FindArrayElementManyOperator()
@@ -1283,7 +1285,7 @@
 >
 > > mongosh
 > >
-> > >  { <array field>: { $elemMatch: { <operator1>: <value1>, <operator1>: <value1> } } } 
+> > >  { `<array field>`: { $elemMatch: { `<operator1>: <value1>`, `<operator1>: <value1>` } } } 
 > >
 > >  ~~~shell
 > >  db.inventory.find( { dim_cm: { $elemMatch: { $gt: 22, $lt: 30 } } } )
@@ -1297,11 +1299,11 @@
 >
 > > C# 
 > >
-> > >  Builders<BsonDocument>.Filter.ElemMatch<BsonValue>(<array field>, new BsonDocument  { 
+> > >  Builders<BsonDocument>.Filter.ElemMatch<BsonValue>(``<array field>``, new BsonDocument  { 
 > > >
-> > > ​	{ "$gt", 22 },
+> > > ​	{ "$gt", `<array value>` },
 > > >
-> > > ​	{ "$lt", 30 }
+> > > ​	{ "$lt",`` <array value>`` }
 > > >
 > > > }
 > >
@@ -1341,10 +1343,10 @@
 >
 > > mongosh 
 > >
-> > > { <array field>.index.index: { $gt: 25 } }
+> > > { `<array field>`.index: { $gt: `<array value` } }
 > >
 > >  ~~~shell
-> >  db.inventory.find( { "dim_cm.1":{"$gt":<array value>}})
+> >  db.inventory.find( { "dim_cm.1":{"$gt":25}})
 > >  ~~~
 > >
 > > 
@@ -1357,7 +1359,7 @@
 >
 > > C# 
 > >
-> > > Builders<BsonDocument>.Filter.Gt(<array field>.index, <value>);
+> > > Builders<BsonDocument>.Filter.Gt(``<array field>``.index, `<value>`);
 > >
 > >  
 > >
@@ -1398,7 +1400,7 @@
 >
 > >  mongosh
 > >
-> > > { <array field>: { $size: length }
+> > > { `<array field>`: { $size: length }
 > >
 > >  ~~~shell
 > >  db.inventory.find( { "tags": { $size: 3 } } )
@@ -1412,7 +1414,7 @@
 >
 > > C# 
 > >
-> > >  Builders<BsonDocument>.Filter.Size(<array field>, length );
+> > >  Builders<BsonDocument>.Filter.Size(``<array field>``, length );
 > >
 > > ```C#
 > > public async Task<object> FindArrayElementByLength()
@@ -1522,7 +1524,7 @@
 
 > 要在数组上指定相等条件，请使用查询文档
 >
-> { <field>: <value> }
+> { `<field>: <value>` }
 >
 > `<value>`是要匹配的确切数组文档，包括文档的顺序。	
 >
@@ -1538,7 +1540,7 @@
 > >
 > > > 完全匹配
 > > >
-> > > > { <field>: <value> }
+> > > > {`` <field>: <value>`` }
 > > > >
 > > > > `<value>`是要匹配的确切数组文档，包括文档的顺序。
 > > >
@@ -1550,7 +1552,7 @@
 > >
 > > > 文档匹配
 > > >
-> > > > { <field>: {$all:<value>} } 
+> > > > { `<field>`: {$all:``<value>``} } 
 > > > >
 > > > > `<value>`是要匹配的数组 文档，不考虑数组文档中的顺序或其他文档
 > > >
@@ -1568,7 +1570,7 @@
 > >
 > > > 完全匹配
 > > >
-> > > > Builders<BsonDocument>.Filter.Eq(<field>, <value>)
+> > > > Builders<BsonDocument>.Filter.Eq(``<field>, <value>``)
 > > > >
 > > > > `<value>` 是要匹配的确切数组文档，包括文档元素的顺序
 > > >
@@ -1602,7 +1604,7 @@
 > >
 > > > 文档元素匹配，不考虑数组中的顺序或其他文档元素
 > > >
-> > > > var filter = Builders<BsonDocument>.Filter.All(<field>, <value>);
+> > > > Builders<BsonDocument>.Filter.All(``<field>, <value>``);
 > > > >
 > > > > `<value>` 是要匹配的文档数组，不考虑数组中的顺序或其他文档元素
 > > >
@@ -1644,9 +1646,9 @@
 >
 > > mongosh
 > >
-> > > {<array filed>:<value>}
+> > > {``<array filed>:<value>``}
 > > >
-> > > <value> 是数组中的文档
+> > > `<value>` 是数组中的文档
 > >
 > >  ~~~shell
 > >  db.inventory.find( { "instock": { warehouse: "A", qty: 5 } } )
@@ -1660,7 +1662,7 @@
 >
 > > C#
 > >
-> > > > Builders<BsonDocument>.Filter.AnyEq(<array field>, <value>);
+> > > > Builders<BsonDocument>.Filter.AnyEq(``<array field>, <value>``);
 > > > >
 > > > > <value> 是数组中的文档元素.
 > > >
@@ -1702,11 +1704,11 @@
 >
 > >  mongosh
 > >
-> > > { <array field>.<docment field>: { $lte: <value> } }
+> > > { `<array field>.<docment field>`: { $lte: `<value>` } }
 > > >
-> > >  <array field> 是数组字段名
+> > > `` <array field>`` 是数组字段名
 > > >
-> > > docment field 是文档中的字段名
+> > > `<docment field> `是文档中的字段名
 > >
 > >  ~~~shell
 > >  db.inventory.find( { 'instock.qty': { $lte: 20 } } )
@@ -1746,8 +1748,6 @@
 > > 
 >
 >  
->
-> 
 
 
 
