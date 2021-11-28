@@ -1,4 +1,4 @@
-安装
+# 安装
 
 ## Linux
 
@@ -400,34 +400,36 @@
 >
 >
 >> mongosh
->>
+>
 >> ~~~sql
 >> db.inventory.find( {} )
 >> ~~~
->>
+>
 >> ![image-20211127130215937](../../../image/image-20211127130215937.png)
 >
 >
 >
 >> C#
->>
+>
 >> ```C#
 >> public async Task<object> FindAll()
 >> {
->>     var filter = Builders<BsonDocument>.Filter.Empty;
->>     var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
->>     var result = collection.Find(filter).ToList();
->>     List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
->>     foreach (var item in result)
->>     {
->>         var dic = item.ToDictionary();
->>         data.Add(dic);
->>     }
->> 
+>>  var filter = Builders<BsonDocument>.Filter.Empty;
+>>  var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
+>>  var result = collection.Find(filter).ToList();
+>>  List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+>>  foreach (var item in result)
+>>  {
+>>      var dic = item.ToDictionary();
+>>      data.Add(dic);
+>>  }
 >>     return data;
 >> }
->> ```
+>
+>>     
 >>
+>>     ```
+>
 >> ![image-20211127131634498](../../../image/image-20211127131634498.png)
 
 
@@ -1748,6 +1750,267 @@
 > > 
 >
 >  
+
+##### 根据索引查询文档中的字段
+
+> 使用[点表示法](https://docs.mongodb.com/manual/reference/glossary/#std-term-dot-notation)，您可以为文档中特定索引或数组位置的字段指定查询条件。该数组使用从零开始的索引。
+>
+> 使用点表示法查询时，字段和索引必须在引号内。
+>
+> 以下示例选择所有文档，其中`instock`数组的第一个文档元素是包含`qty` 字段，值小于或等于`5`的的文档：
+
+>  
+>
+> >  mongosh
+> >
+> > > {`<array field>.index.<field>`:{$lte:`value`}}
+> >
+> >  ~~~shell
+> >  db.inventory.find( { 'instock.0.qty': { $lte: 5} } )
+> >  ~~~
+> >
+> > ![image-20211128114952846](../../../image/image-20211128114952846.png)
+> >
+> > 
+>
+> >  C# 
+> >
+> > > Builders<BsonDocument>.Filter.Lte(`<array field>.index.<field>`, `value`);
+> >
+> >   
+> >
+> > ```c#
+> > public async Task<object> FindArrayDocumentFieldOperatorByIndex()
+> > {
+> >     var filter = Builders<BsonDocument>.Filter.Lte("instock.0.qty", 5);
+> >     var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
+> >     var result = collection.Find(filter).ToList();
+> >     List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+> >     foreach (var item in result)
+> >     {
+> >         var dic = item.ToDictionary();
+> >         data.Add(dic);
+> >     }
+> > 
+> >     return data;
+> > }
+> > ```
+> >
+> > 
+> >
+> >  ![image-20211128120715978](../../../image/image-20211128120715978.png)
+> >
+> > 
+>
+>  
+
+#### 为数组指定多个条件
+
+> 当对嵌套在文档数组中的多个字段指定条件时，您可以指定查询，以便单个文档满足这些条件或数组中的任何文档组合（包括单个文档）满足条件。
+
+##### 单个嵌套文档在嵌套字段上满足多个查询条件
+
+> 使用[`$elemMatch`](https://docs.mongodb.com/manual/reference/operator/query/elemMatch/#mongodb-query-op.-elemMatch)运算符在一组嵌入文档上指定多个条件，以便至少一个嵌入文档满足所有指定的条件。
+>
+> 1、以下示例查询`instock`数组至少有一个包含字段`qty`等于`5`和字段`warehouse`等于`A`的嵌入文档的文档 ：
+>
+> 2、以下示例查询文档，其中`instock`数组至少有一个包含字段`qty`大于`10`和小于或等于`20`的嵌入文档得文档：
+
+>  
+>
+> >  mongosh 
+> >
+> > > {`<array field>`:{$elemMatch:{`<field>`:`<value>`,`<field>`:`<value>`,......}}}
+> >
+> >  ~~~shell
+> >  db.inventory.find( { "instock": { $elemMatch: { qty: 5, warehouse: "A" } } } )
+> >  ~~~
+> >
+> > 
+> >
+> > ![image-20211128122254087](../../../image/image-20211128122254087.png)
+> >
+> > ![image-20211128122558344](../../../image/image-20211128122558344.png)
+> >
+> > ~~~shell
+> > db.inventory.find( { "instock": { $elemMatch: { qty: { $gt: 10, $lte: 20 } } } } )
+> > ~~~
+> >
+> > ![image-20211128124726583](../../../image/image-20211128124726583.png)
+> >
+> >  
+>
+>  
+>
+> > C# 
+> >
+> > > Builders<BsonDocument>.Filter.ElemMatch<BsonValue>(`<array field>`, new BsonDocument { { `<field>`, `<value>` }, { `<field>`, `<value>` } });
+> >
+> > ```c#
+> > public async Task<object> FindArrayDocumentManyFileOperator()
+> > {
+> >     var filter = Builders<BsonDocument>.Filter.ElemMatch<BsonValue>(
+> >         "instock",
+> >         new BsonDocument
+> >         {
+> >             {"qty", 5},
+> >             {"warehouse", "A"}
+> >         });
+> >     var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
+> >     var result = collection.Find(filter).ToList();
+> >     List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+> >     foreach (var item in result)
+> >     {
+> >         var dic = item.ToDictionary();
+> >         data.Add(dic);
+> >     }
+> > 
+> >     return data;
+> > }
+> > ```
+> >
+> > ![image-20211128123734988](../../../image/image-20211128123734988.png)
+> >
+> >  
+> >
+> >  
+> >
+> > ```c#
+> > public async Task<object> FindArrayDocumentManyFileOperator1()
+> > {
+> >     var filter = Builders<BsonDocument>.Filter.ElemMatch<BsonValue>(
+> >         "instock",
+> >         new BsonDocument
+> >         {
+> >             {
+> >                 "qty", new BsonDocument
+> >                 {
+> >                     {"$gt", 10},
+> >                     {"$lte", 20}
+> >                 }
+> >             },
+> >         });
+> >     var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
+> >     var result = collection.Find(filter).ToList();
+> >     List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+> >     foreach (var item in result)
+> >     {
+> >         var dic = item.ToDictionary();
+> >         data.Add(dic);
+> >     }
+> > 
+> >     return data;
+> > }
+> > ```
+> >
+> > ![image-20211128125223976](../../../image/image-20211128125223976.png)
+>
+> 
+
+##### 元素组合满足标准
+
+> 如果数组字段上的复合查询条件不使用 [`$elemMatch`](https://docs.mongodb.com/manual/reference/operator/query/elemMatch/#mongodb-query-op.-elemMatch)运算符，则查询将选择其数组包含满足条件的任意元素组合的文档。
+>
+> 1、例如，以下查询匹配`instock`数组中嵌套的任何文档的`qty`字段大于 `35`并且数组中的任何文档（但不一定是相同的嵌入文档）的`qty`字段小于或等于`60`的 文档：
+>
+> 2、对于其中的文档下列示例查询`instock`阵列具有至少一个嵌入的文档包含该字段`qty` 等于`5`包含该字段和至少一个嵌入的文档（但不一定是相同的嵌入的文档）`warehouse`等于`A`：
+
+>  
+>
+> > mongosh 
+> >
+> > > { `<array field>`: { `$gt`: `<value>`,  `$​lt`: `<value> `} }
+> >
+> >  ~~~shell
+> >  db.inventory.find( { "instock.qty": { $gt: 35,  $lt: 60 } } )
+> >  ~~~
+> >
+> > 
+> >
+> > ![image-20211128133033978](../../../image/image-20211128133033978.png)
+> >
+> >  ~~~shell
+> >  db.inventory.find( { "instock.qty": 5, "instock.warehouse": "A" } )
+> >  ~~~
+> >
+> > 
+> >
+> > ![image-20211128132325767](../../../image/image-20211128132325767.png)
+>
+> 
+>
+> > C# 
+> >
+> > > var builder = Builders<BsonDocument>.Filter;
+> > > builder.And(
+> > >
+> > > ​	builder.Gt("instock.qty", 35), 
+> > >
+> > > ​	builder.Lte("instock.qty", 60)
+> > >
+> > > ); 
+> >
+> > ```c#
+> > public async Task<object> FindArrayDocumentNotElemMatch()
+> > {
+> >     var builder = Builders<BsonDocument>.Filter;
+> >     var filter = builder.And(
+> >         builder.Gt("instock.qty", 35),
+> >         builder.Lt("instock.qty", 60));
+> >     var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
+> >     var result = collection.Find(filter).ToList();
+> >     List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+> >     foreach (var item in result)
+> >     {
+> >         var dic = item.ToDictionary();
+> >         data.Add(dic);
+> >     }
+> > 
+> >     return data;
+> > }
+> > ```
+> >
+> >  ![image-20211128140839045](../../../image/image-20211128140839045.png)
+> >
+> > ```c#
+> > public async Task<object> FindArrayDocumentNotElemMatch1()
+> > {
+> >     var builder = Builders<BsonDocument>.Filter;
+> >     var filter = builder.And(
+> >         builder.Eq("instock.qty", 5),
+> >         builder.Eq("instock.warehouse", "A"));
+> >     var collection = _mongoDatabase.GetCollection<BsonDocument>("inventory");
+> >     var result = collection.Find(filter).ToList();
+> >     List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+> >     foreach (var item in result)
+> >     {
+> >         var dic = item.ToDictionary();
+> >         data.Add(dic);
+> >     }
+> > 
+> >     return data;
+> > }
+> > ```
+> >
+> > ![image-20211128141048322](../../../image/image-20211128141048322.png)
+>
+> 
+
+### 查询数组总结
+
+> 数组（string 、int ......）/数组文档(document)，都是数组中的元素  查询 也准寻数组元素的查询方式
+>
+> ~~~shell
+> db.inventory.find( { "instock.qty": { $gt: 35,  $lt: 60 } } )
+> ~~~
+>
+> 查询数组元素（文档）中 ，任何元素 的 qty 大于35 和任何元素 qty  小于60
+>
+> 相当于查询数组中 的元素 有小于 60 的和大于 30 的  
+>
+> 
+
+### 投影
 
 
 
