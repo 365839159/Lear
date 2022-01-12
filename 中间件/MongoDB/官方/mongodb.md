@@ -2012,7 +2012,35 @@
 
 ### 投影
 
+#### 返回指定字段和_id
 
+>通过在投影文档中设置`<field>`to `1`，投影可以显式包含多个字段 。以下操作返回与查询匹配的所有文档。在结果集中，只有`item`,`status`和，默认情况下，`_id`字段在匹配文档中返回。
+>
+>```sql
+>SELECT _id, item, status from inventory WHERE status = "A"
+>```
+
+> 
+>
+>> mongosh
+>>
+>>  
+>>
+>> ```shell
+>> db.inventory.find( { status: "A" }, { item: 1, status: 1 } )
+>> ```
+>>
+>>  
+>
+> 
+>
+>> C# 
+>>
+>>  
+>>
+>> 
+>
+>
 
 ## 更新
 
