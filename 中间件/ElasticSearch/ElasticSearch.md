@@ -123,15 +123,54 @@ POST /_aliases
 }
 ~~~
 
+# 映射
 
+## 查看映射
 
+```shell
+GET /{index_name}/_mapping
+```
 
+查看 index_test 映射
 
+~~~shell
+GET /index_test/_mapping
+~~~
 
+## 扩展映射
 
+```shell
+POST /index_test/_mapping
+{
+  "properties":{
+    "title":{
+      "type":"text"
+    }
+  }
+}
+```
 
+## 基础数据类型
 
+### keyword
 
+keyword类型的数据不进行切分，直接构建倒排索引；在搜索时，对该类型的查询字符串不进行切分后的部分匹配。keyword类型数据一般用于对文档的过滤、排序和聚合
+
+### text
+
+text类型是可进行切分的字符串类型。在索引时，可按照相应的切词算法对文本内容进行切分，然后构建倒排索引；在搜索时，对该类型的查询字符串按照用户的切词算法进行切分，然后对切分后的部分匹配打分
+
+### 数值类型
+
+ES支持的数值类型有long、integer、short、byte、double、float、half_float、scaled_float和unsigned_long等。
+
+### boolean
+
+写入或者查询该类型的数据时，其值可以使用true和false，或者使用字符串形式的"true"和"false"
+
+### date
+
+在ES中，日期类型的名称为date。ES中存储的日期是标准的UTC格式。
 
 
 
