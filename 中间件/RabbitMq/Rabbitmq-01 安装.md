@@ -6,23 +6,31 @@
 >
 > 消息格式：二进制数据块
 
+
+
 >行话
 >
 >生产者：发送消息的程序
 >
 >队列：存放消息的缓冲区
 >
->消费者：接受消息的程序、
+>消费者：接受消息的程序
+
+
+
+> 在下图中，“P”是我们的生产者，“C”是我们的消费者。中间的框是一个队列 RabbitMQ 代表消费者保存的消息缓冲区
 
 ![image-20220301080855482](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220301080855482.png)
 
 
 
-# Centos 单机安装 RabbitMQ
+----
 
-> 安装 erlang 运行时
->
-> 官网：https://www.erlang-solutions.com/downloads/
+
+
+# Centos7 单机安装 RabbitMQ
+
+> 创建存放 rabbitmq 下载文件的文件夹
 
 ~~~shell
 # 创建一个新目录
@@ -30,8 +38,16 @@ mkdir /usr/rabbitmq
 
 # 进入该目录
 cd /usr/rabbitmq
+~~~
 
-# 下载
+> 安装 erlang 
+>
+> 官网：https://www.erlang-solutions.com/downloads/
+>
+> rabbitmq 是高并发语言 erlang 开发所以运行 rabbitmq 需要先安装 erlang 
+
+~~~shell
+# 下载 erlang 安装包
 wget https://packages.erlang-solutions.com/erlang-solutions-2.0-1.noarch.rpm
 
 # 解压
@@ -42,7 +58,7 @@ sudo yum install erlang -y
 
 ~~~
 
-> 安装 socat
+> 安装 socat 
 
 ~~~shell
 yum install -y socat
@@ -79,10 +95,10 @@ rabbitmq-plugins enable  rabbitmq_management
 > 允许通过防火墙
 
 ~~~shell
-# 开放可视化页面
+# 开放可视化界面端口
 firewall-cmd --zone=public --add-port=15672/tcp --permanent
 
-# 开放访问
+# 开放连接端口
 firewall-cmd --zone=public --add-port=5672/tcp --permanent
 
 ~~~
@@ -113,12 +129,16 @@ systemctl restart rabbitmq-server
 >
 >http://ip:15672
 
+> 远程连接配置
+
+~~~bash
+#授权远程访问，否则不能创建连接(admin 为账号)
+rabbitmqctl set_permissions -p / admin "." "." ".*"
+~~~
+
 > 其他命令
 
 ~~~shell
-#授权远程访问
-rabbitmqctl set_permissions -p / richard "." "." ".*"
-
 一、防火墙的开启、关闭、禁用命令
 （1）设置开机启用防火墙：systemctl enable firewalld.service
 （2）设置开机禁用防火墙：systemctl disable firewalld.service
@@ -126,9 +146,9 @@ rabbitmqctl set_permissions -p / richard "." "." ".*"
 （4）关闭防火墙：systemctl stop firewalld
 （5）检查防火墙状态：systemctl status firewalld
 二、使用firewall-cmd配置端口
-（1）查看防火墙状态：firewall-cmd -state
+（1）查看防火墙状态：firewall-cmd --state
 （2）重新加载配置：firewall-cmd -reload
-（3）查看开放的端口：firewall-cmd -list-ports
+（3）查看开放的端口：firewall-cmd --list-ports
 （4）开启防火墙端口：firewall-cmd -zone=public -add-port=9200/tcp permanent
 命令含义：
 –zone #作用域
@@ -140,53 +160,4 @@ rabbitmqctl set_permissions -p / richard "." "." ".*"
 ~~~
 
 
-
-# 整合 .Net6
-
-## 一个简单的hello world
-
-> 依赖
-
-~~~shell
-# nuget 安装
-RabbitMQ.Client
-
-#使用的类引入
-using RabbitMQ.Client
-~~~
-
-
-
-> 生产
-
-![image-20220301081221496](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220301081221496.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-> 消费
->
 

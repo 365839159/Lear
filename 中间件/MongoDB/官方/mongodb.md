@@ -42,7 +42,7 @@
 > ~~~shell
 > # 使用默认目录
 > 
-> # 默认情况下，MongoDB 使用mongod用户帐户运行并使用以下默认目录：
+> # 默认情况下，MongoDB 使用 mongod 用户帐户运行并使用以下默认目录：
 > /var/lib/mongo 	 #（数据目录）
 > /var/log/mongodb #（日志目录）
 > 
