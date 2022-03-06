@@ -8,10 +8,10 @@
 
 ## 在线安装
 
-~~~shell
+```shell
 # 下载
 wget -q https://raw.githubusercontent.com/dapr/cli/master/install/install.sh -O - | /bin/bash
-~~~
+```
 
 ```shell
 # 验证
@@ -83,10 +83,6 @@ Runtime version: 1.4.3
 
 ![image-20211107222706874](../image/image-20211107222706874.png)
 
-
-
-
-
 ```shell
 # Dapr Runtime v1.4.3
 地址：https://github.com/dapr/dapr/releases
@@ -103,15 +99,11 @@ Runtime version: 1.4.3
 
 ### 下载完成
 
-
-
 ![image-20211107223209158](../image/image-20211107223209158.png)
 
 ## 安装
 
 ### cli安装
-
-
 
 ```shell
 # 打开wls2 切换到 /usr/local/bin/
@@ -195,18 +187,13 @@ CONTAINER ID   IMAGE               COMMAND                  CREATED          STA
 051f943f7541   daprio/dapr:1.4.3   "./placement"            42 minutes ago   Up 42 minutes             0.0.0.0:50005->50005/tcp           dapr_placement
 4b5416820802   openzipkin/zipkin   "start-zipkin"           42 minutes ago   Up 42 minutes (healthy)   9410/tcp, 0.0.0.0:9411->9411/tcp   dapr_zipkin
 5da51e91779a   redis               "docker-entrypoint.s…"   42 minutes ago   Up 42 minutes             0.0.0.0:6379->6379/tcp             dapr_redis
-
 ```
-
-
 
 ```shell
 # 检查当前用户下有没有.dapr/目录，没有 还是需要继续 dapr uninstall dapr init
 zxc@DESKTOP-NQ9L1A6:~$ ls -a
 .  ..  .aws  .azure  .bash_history  .bash_logout  .bashrc  .dapr  .docker  .dotnet  .landscape  .motd_shown  .profile  .sudo_as_admin_successful  .wget-hsts
 ```
-
-
 
 ```shell
 # 切换到当前用户的.dapr/bin 目录 我这里是 /home/zxc/.dapr/bin
@@ -278,16 +265,12 @@ terminated signal received: shutting down
 ✅  Exited Dapr successfully
 ```
 
-
-
 ```shell
 # 查看运行时 版本
 zxc@DESKTOP-NQ9L1A6:/usr/local/bin/publish$ dapr -v
 CLI version: 1.4.0
 Runtime version: 1.4.3
 ```
-
-
 
 ## 新建 asp.net core 应用 发布
 
@@ -296,8 +279,6 @@ Runtime version: 1.4.3
 ## 将发布的文件移动到wls2中
 
 ![image-20211107231136011](../image/image-20211107231136011.png)
-
-
 
 ```shell
 # 切换到publish 文件夹中
@@ -321,8 +302,6 @@ warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
 ^Cinfo: Microsoft.Hosting.Lifetime[0]
       Application is shutting down...
 ```
-
-
 
 ```shell
 # 使用dapr run 运行
@@ -373,8 +352,6 @@ ERRO[0001] error occurred while beginning pubsub pubsub: the server closed conne
 INFO[0001] dapr initialized. Status: Running. Init Elapsed 986.951ms  app_id=frontend instance=DESKTOP-NQ9L1A6 scope=dapr.runtime type=log ver=1.4.3
 INFO[0001] placement tables updated, version: 0          app_id=frontend instance=DESKTOP-NQ9L1A6 scope=dapr.runtime.actor.internal.placement type=log ver=1.4.3
 ```
-
-
 
 浏览器打开 http://localhost:50001
 

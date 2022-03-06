@@ -181,8 +181,6 @@ MongoDB 将文档存储在[集合中](https://docs.mongodb.com/manual/core/datab
 
 `<field>: 0` 返回文档中的排除这个字段
 
-
-
 - 返回 title ，directors ，year （_id 默认是返回的）
 
 ```json
@@ -262,10 +260,8 @@ MongoDB 将文档存储在[集合中](https://docs.mongodb.com/manual/core/datab
 { "_id" : ObjectId("6146e76987f8346ec8e1aca0"), "title" : "Casablanca", "genres" : "War", "rated" : "PG", "cast" : [ "Humphrey Bogart", "Ingrid Bergman", "Paul Henreid", "Claude Rains" ], "languages" : [ "English", "French", "German", "Italian" ], "released" : ISODate("1943-01-23T00:00:00Z"), "directors" : [ "Michael Curtiz" ], "awards" : { "wins" : 9, "nominations" : 6, "text" : "Won 3 Oscars. Another 6 wins & 6 nominations." }, "lastupdated" : "2015-09-04 00:22:54.600000000", "year" : 1942 }
 ```
 
-
-
 - [`$group`](https://docs.mongodb.com/manual/reference/operator/aggregation/group/#mongodb-pipeline-pipe.-group)和[`$count`](https://docs.mongodb.com/manual/reference/operator/aggregation/count-accumulator/#mongodb-group-grp.-count)累加器来计算每个 的出现次数`genre`。该值存储在`genreCount`字段中。
-
+  
   ```json
   > db.movies.aggregate( [    { $unwind: "$genres" },{$group{_id: "$genres",genreCount: { $count: { }}}} ] )
   
@@ -285,8 +281,6 @@ MongoDB 将文档存储在[集合中](https://docs.mongodb.com/manual/core/datab
   
   { "_id" : "Adventure", "genreCount" : 1 }
   ```
-
-  
 
 - [`$sort`](https://docs.mongodb.com/manual/reference/operator/aggregation/sort/#mongodb-pipeline-pipe.-sort)按`genreCount`字段按降序对结果文档进行排序。
 
@@ -415,8 +409,6 @@ MongoDB 视图是一个可查询对象，其内容由其他集合或视图上的
 
 ## 创建视图
 
-
-
 # 上限集合
 
 ## 概述
@@ -506,10 +498,8 @@ true
 ```json
 > db.createCollection("weather", { timeseries: { timeField: "timestamp" } } )
 
-{ "ok" : 1 }	
+{ "ok" : 1 }    
 ```
-
-
 
 ```json
 >db.createCollection(
@@ -529,12 +519,12 @@ true
 
 创建时间序列集合时，请指定以下选项：
 
-| 场地                     | 类型 | 描述                                                         |
-| :----------------------- | :--- | :----------------------------------------------------------- |
-| `timeseries.timeField`   | 细绳 | 必需的。每个时间序列文档中包含日期的字段的名称。时间序列集合中的文档必须具有有效的 BSON 日期作为`timeField`. |
-| `timeseries.metaField`   | 细绳 | 可选的。每个时间序列文档中包含元数据的字段的名称。指定字段中的元数据应该是用于标记唯一系列文档的数据。元数据应该很少（如果有的话）更改。指定字段的名称可能`_id`与`timeseries.timeField`. 该字段可以是任何类型。 |
-| `timeseries.granularity` | 细绳 | 可选的。可能的值是`"seconds"`，`"minutes"`和 `"hours"`。默认情况下，MongoDB 将 设置`granularity`为 `"seconds"`用于高频摄取。`granularity`通过优化时间序列集合中数据的内部存储方式，手动设置参数以提高性能。要为 选择一个值`granularity`，请选择与连续传入测量值之间的时间跨度最接近的匹配项。如果指定`timeseries.metaField`，请考虑具有相同`metaField`字段唯一值的连续传入测量之间的时间跨度。如果测量值`metaField`来自相同的来源，则它们通常具有相同的字段唯一值。如果未指定`timeseries.metaField`，请考虑插入集合中的所有测量值之间的时间跨度。 |
-| `expireAfterSeconds`     | 数字 | 可选的。通过指定文档过期的秒数来启用[时间序列集合](https://docs.mongodb.com/manual/reference/glossary/#std-term-time-series-collection)中文档的自动删除 。MongoDB 会自动删除过期的文档。有关详细信息，请参阅[为时间序列集合 (TTL) 设置自动删除](https://docs.mongodb.com/manual/core/timeseries/timeseries-automatic-removal/#std-label-manual-timeseries-automatic-removal)。 |
+| 场地                       | 类型  | 描述                                                                                                                                                                                                                                                                                                                                                       |
+|:------------------------ |:--- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `timeseries.timeField`   | 细绳  | 必需的。每个时间序列文档中包含日期的字段的名称。时间序列集合中的文档必须具有有效的 BSON 日期作为`timeField`.                                                                                                                                                                                                                                                                                          |
+| `timeseries.metaField`   | 细绳  | 可选的。每个时间序列文档中包含元数据的字段的名称。指定字段中的元数据应该是用于标记唯一系列文档的数据。元数据应该很少（如果有的话）更改。指定字段的名称可能`_id`与`timeseries.timeField`. 该字段可以是任何类型。                                                                                                                                                                                                                                   |
+| `timeseries.granularity` | 细绳  | 可选的。可能的值是`"seconds"`，`"minutes"`和 `"hours"`。默认情况下，MongoDB 将 设置`granularity`为 `"seconds"`用于高频摄取。`granularity`通过优化时间序列集合中数据的内部存储方式，手动设置参数以提高性能。要为 选择一个值`granularity`，请选择与连续传入测量值之间的时间跨度最接近的匹配项。如果指定`timeseries.metaField`，请考虑具有相同`metaField`字段唯一值的连续传入测量之间的时间跨度。如果测量值`metaField`来自相同的来源，则它们通常具有相同的字段唯一值。如果未指定`timeseries.metaField`，请考虑插入集合中的所有测量值之间的时间跨度。 |
+| `expireAfterSeconds`     | 数字  | 可选的。通过指定文档过期的秒数来启用[时间序列集合](https://docs.mongodb.com/manual/reference/glossary/#std-term-time-series-collection)中文档的自动删除 。MongoDB 会自动删除过期的文档。有关详细信息，请参阅[为时间序列集合 (TTL) 设置自动删除](https://docs.mongodb.com/manual/core/timeseries/timeseries-automatic-removal/#std-label-manual-timeseries-automatic-removal)。                                               |
 
 ## 将测量值插入时间序列集合
 
@@ -663,4 +653,3 @@ db.weather.insertMany([{
 ## 在Red Hat 或CentOS上安装MongoDB社区版
 
 # MongoDB CRUD操作
-

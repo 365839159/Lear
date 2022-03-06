@@ -4,7 +4,6 @@ bcdedit /set hypervisorlaunchtype auto
 1
 bcdedit /set hypervisorlaunchtype off
 
-
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
   "registry-mirrors": [

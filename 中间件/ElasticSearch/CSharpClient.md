@@ -4,7 +4,7 @@ https://www.pianshen.com/article/5896320324/
 
 # 创建索引（Ik分词）
 
-~~~shell
+```shell
 PUT /userinfo
 {
   "mappings": {
@@ -33,14 +33,13 @@ PUT /userinfo
     "number_of_replicas": 0
   }
 }
-~~~
+```
 
-~~~json
+```json
 //结果
 {
   "acknowledged" : true,
   "shards_acknowledged" : true,
   "index" : "userinfo"
 }
-~~~
-
+```
