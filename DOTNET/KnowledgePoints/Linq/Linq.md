@@ -185,3 +185,5 @@ var result17 = nums.Select(s => new {age = s});
 
 ~~~
 
+![image-20220218100941258](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\DOTNET\KnowledgePoints\Linq\image-20220218100941258.png)
+

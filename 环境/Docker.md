@@ -77,7 +77,7 @@ sudo yum makecache fast
 
 ```shell
 # 安装docker引擎
-sudo yum install docker-ce docker-ce-cli containerd.io
+sudo yum install docker-ce docker-ce-cli containerd.io -y
 
 # 解释
 docker-ce  #社区版

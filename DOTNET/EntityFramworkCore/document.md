@@ -230,11 +230,11 @@ dotnet ef migrations script
         }
 ~~~
 
-# 约定配置
+# 约定大于配置
 
 > 主要规则
 >
-> 1、表明采用DbSet<T>  的属性名
+> 1、表名采用DbSet<T>  的属性名
 >
 > 2、列名采用实体属性名
 >
@@ -261,7 +261,7 @@ dotnet ef migrations script
     }
 ~~~
 
-> dbContext.OnModelCreating 配置：所有配置代码在一起
+> dbContext.OnModelCreating 配置：所有配置代码在一起，特乱
 
 ~~~C#
            modelBuilder.Entity<Book>().ToTable("t_Books").HasKey(s => s.BookId);
@@ -376,7 +376,7 @@ G-->I
 
 > 1、日志系统
 
-> 2、dbContext.OnConfiguring
+> 2、dbContext.OnConfiguring中配置输出到控制台
 
 ~~~C#
 optionsBuilder.LogTo(msg =>
