@@ -1,6 +1,6 @@
 # 工作队列（Work Queues）
 
-![image-20220304114431919](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304114431919.png)
+![image-20220304114431919](image-20220304114431919.png)
 
 > 场景：假设生产者向队列中添加一条数据的时间为1秒，消费者从队列中消费一条数据执行完业务逻辑需要5秒，在这种情况下队列就会不断堆积最终导致服务瘫痪。
 >
@@ -93,27 +93,27 @@ using (var channel = connection.CreateModel())
 
 > 启动5个消费者
 
-![image-20220304130826599](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304130826599.png)
+![image-20220304130826599](image-20220304130826599.png)
 
 > 可视化界面中查看连接数为5个
 
-![image-20220304131030524](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304131030524.png)
+![image-20220304131030524](image-20220304131030524.png)
 
 > 启动1个生产者
 
-![image-20220304131150907](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304131150907.png)
+![image-20220304131150907](image-20220304131150907.png)
 
 > 可视化界面连接多了1个生产者
 
-![image-20220304131827909](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304131827909.png)
+![image-20220304131827909](image-20220304131827909.png)
 
 > 测试结果
 >
 > 5个消费者一起消费队列中的任务。
 
-![image-20220304131559133](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304131559133.png)
+![image-20220304131559133](image-20220304131559133.png)
 
 > 运行一段时间后 rabbitmq 队列中 也没有过多的堆积任务
 
-![image-20220304131734017](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220304131734017.png)
+![image-20220304131734017](image-20220304131734017.png)
 

@@ -1,6 +1,6 @@
 # 介绍
 
-![image-20220228133050731](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220228133050731.png)
+![image-20220228133050731](image-20220228133050731.png)
 
 > RabbitMQ : 消息代理，接受和转发消息
 >
@@ -20,7 +20,7 @@
 
 > 在下图中，“P”是我们的生产者，“C”是我们的消费者。中间的框是一个队列 RabbitMQ 代表消费者保存的消息缓冲区
 
-![image-20220301080855482](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220301080855482.png)
+![image-20220301080855482](image-20220301080855482.png)
 
 
 

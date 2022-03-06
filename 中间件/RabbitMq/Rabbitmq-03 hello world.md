@@ -2,7 +2,7 @@
 
 ### 生产者
 
-![image-20220301081221496](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220301081221496.png)
+![image-20220301081221496](image-20220301081221496.png)
 
 > 1、创建控制台项目
 
@@ -102,13 +102,13 @@ Console.ReadLine();
 
 > 启动
 
-![image-20220303132601427](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220303132601427.png)
+![image-20220303132601427](image-20220303132601427.png)
 
 
 
 > 可视化界面中 Queues 中已经有一条数据了
 
-![image-20220303132716410](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220303132716410.png)
+![image-20220303132716410](image-20220303132716410.png)
 
 
 
@@ -118,7 +118,7 @@ Console.ReadLine();
 
 ### 消费者
 
-![image-20220303133310622](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220303133310622.png)
+![image-20220303133310622](image-20220303133310622.png)
 
 > 1、大概和生产者雷同，打开连接和通道声明消费的队列。
 >
@@ -193,13 +193,13 @@ using (var channel = connection.CreateModel())
 
 > 启动
 
-![image-20220303150357556](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220303150357556.png)
+![image-20220303150357556](image-20220303150357556.png)
 
 
 
 > 可视化界面的数据已被消费
 
-![image-20220303150429486](C:\Users\xian_cheng\Desktop\Learm\Node\Lear\中间件\RabbitMq\image-20220303150429486.png)
+![image-20220303150429486](image-20220303150429486.png)
 
 
 
