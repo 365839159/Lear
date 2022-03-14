@@ -391,3 +391,67 @@ optionsBuilder.LogTo(msg =>
 >
 > 注：只能获取查询的语句
 
+# 同样的sql翻译为不同的sql语句
+
+
+
+# 关系配置
+
+## 一对一
+
+法律上一个老公对应一个老婆
+
+wife(Id ,Name,HId)
+
+Husband(Id ,Name)
+
+## 一对多
+
+一个父亲有多个孩子
+
+Dad(id ,Name)
+
+Child(id ,Name ,Fid)
+
+## 多对多
+
+一个教师对应多个学生，一个学生有多个教师
+
+Teacher(id,Nmae)
+
+Student(Id,Name)
+
+T1(SId，TId)
+
+# 配置步骤
+
+1、声明实体类中的关系属性
+
+2、FluentAPI 关系配置
+
+3、使用关系操作
+
+
+
+## 一对多配置
+
+~~~C#
+public class Article
+{
+    public long Id{get;set;}
+    public string Title{get;set;}
+    public string Content{get;set;}
+    public List<Comment>Comments{get;set;}=new List<Comment>()
+}
+
+public class Comment
+{
+    public long Id{get;set;}
+    public Article Article{get;set;}
+    public string Message{get;set;}
+}
+
+~~~
+
+
+
