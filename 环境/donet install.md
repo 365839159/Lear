@@ -1,3 +1,7 @@
+https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-ubuntu
+
+
+
 # Centos 7
 
 ```shell
